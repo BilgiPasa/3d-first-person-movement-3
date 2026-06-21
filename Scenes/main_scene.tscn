@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://vqg7uhh4omn8"]
+
+[ext_resource type="PackedScene" uid="uid://cx3nf532photv" path="res://Scenes/player_and_camera.tscn" id="1_52fb6"]
+[ext_resource type="Script" uid="uid://y0aegwbe0ac2" path="res://Scripts/main_scene.gd" id="1_jv6wh"]
+[ext_resource type="PackedScene" uid="uid://dgswa7otbkuth" path="res://Scenes/pause_menu.tscn" id="2_6l7je"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6l7je"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_jv6wh"]
+sky_material = SubResource("ProceduralSkyMaterial_6l7je")
+
+[sub_resource type="Environment" id="Environment_x6ack"]
+background_mode = 2
+sky = SubResource("Sky_jv6wh")
+glow_enabled = true
+
+[node name="MainScene" type="Node3D" unique_id=1991236932]
+script = ExtResource("1_jv6wh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=876222076]
+environment = SubResource("Environment_x6ack")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1071685992]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="PlayerAndCamera" parent="." unique_id=1785156103 instance=ExtResource("1_52fb6")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1161452187]
+
+[node name="SpeedLabel" type="Label" parent="CanvasLayer" unique_id=626585624]
+offset_left = 40.0
+offset_top = 20.0
+offset_right = 306.0
+offset_bottom = 89.0
+theme_override_font_sizes/font_size = 50
+text = "Speed: xy.z"
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=788778746 instance=ExtResource("2_6l7je")]
+visible = false
+
+[connection signal="open_settings" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_open_settings"]
+[connection signal="resume_game" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_resume_game"]

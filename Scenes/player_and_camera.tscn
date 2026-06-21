@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cx3nf532photv"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_a5f1f"]
+[ext_resource type="Script" uid="uid://bxdo3v2a7lhhm" path="res://Scripts/player_and_camera.gd" id="1_vu1q0"]
+[ext_resource type="Script" uid="uid://d0b3n25jqa5ep" path="res://Scripts/player.gd" id="3_t5fc0"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wkhpl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r07tb"]
+
+[node name="PlayerAndCamera" type="Node3D" unique_id=1785156103 node_paths=PackedStringArray("player", "camera", "camera_position")]
+script = ExtResource("1_vu1q0")
+player = NodePath("Player")
+camera = NodePath("Camera3D")
+camera_position = NodePath("Player/CameraPosition")
+
+[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242]
+collision_layer = 2
+physics_material_override = ExtResource("1_a5f1f")
+script = ExtResource("3_t5fc0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player" unique_id=1960179756]
+layers = 2
+mesh = SubResource("CapsuleMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1680285629]
+shape = SubResource("CapsuleShape3D_r07tb")
+
+[node name="CameraPosition" type="Node3D" parent="Player" unique_id=1390214656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1566701192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+cull_mask = 1048573
+fov = 90.0

@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://dgswa7otbkuth"]
+
+[ext_resource type="Script" uid="uid://b10un1x6s8u5x" path="res://Scripts/pause_menu.gd" id="1_emv3i"]
+
+[node name="PauseMenu" type="Control" unique_id=788778746 node_paths=PackedStringArray("resume_button", "version_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_emv3i")
+resume_button = NodePath("Panel/ResumeButton")
+version_label = NodePath("Panel/VersionLabel")
+
+[node name="Panel" type="Panel" parent="." unique_id=2118232402]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GamePausedLabel" type="Label" parent="Panel" unique_id=680969999]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -363.5
+offset_top = 125.0
+offset_right = 363.5
+offset_bottom = 276.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 110
+text = "Game Paused"
+
+[node name="ResumeButton" type="Button" parent="Panel" unique_id=692327372]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -197.5
+offset_top = -215.0
+offset_right = 197.5
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../SettingsButton")
+focus_next = NodePath("../SettingsButton")
+focus_previous = NodePath(".")
+theme_override_font_sizes/font_size = 100
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="Panel" unique_id=1205478677]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -188.0
+offset_top = -40.0
+offset_right = 188.0
+offset_bottom = 98.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../ResumeButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../QuitGameButton")
+focus_next = NodePath("../QuitGameButton")
+focus_previous = NodePath("../ResumeButton")
+theme_override_font_sizes/font_size = 95
+text = "Settings"
+
+[node name="QuitGameButton" type="Button" parent="Panel" unique_id=1588599127]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = 135.0
+offset_right = 186.0
+offset_bottom = 239.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../SettingsButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath(".")
+focus_previous = NodePath("../SettingsButton")
+theme_override_font_sizes/font_size = 70
+text = "Quit Game"
+
+[node name="VersionLabel" type="Label" parent="Panel" unique_id=1876534889]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -126.0
+offset_top = -79.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+text = "vA.B"
