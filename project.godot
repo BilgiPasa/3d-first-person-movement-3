@@ -14,7 +14,7 @@ config/name="3d-first-person-movement-3"
 config/version="0.1"
 run/main_scene="uid://vqg7uhh4omn8"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://bvutxnch1t6g1"
 
 [display]
 
