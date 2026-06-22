@@ -8,6 +8,9 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r07tb"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_5s483"]
+size = Vector3(0.6, 1.1, 0.1)
+
 [node name="PlayerAndCamera" type="Node3D" unique_id=1785156103 node_paths=PackedStringArray("player", "camera", "camera_position")]
 script = ExtResource("1_vu1q0")
 player = NodePath("Player")
@@ -29,7 +32,17 @@ shape = SubResource("CapsuleShape3D_r07tb")
 [node name="CameraPosition" type="Node3D" parent="Player" unique_id=1390214656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
+[node name="BumpArea" type="Area3D" parent="Player" unique_id=81583961]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/BumpArea" unique_id=626794957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_5s483")
+
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1566701192]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 cull_mask = 1048573
 fov = 90.0
+
+[connection signal="body_entered" from="Player/BumpArea" to="Player" method="_on_bump_area_body_entered"]
+[connection signal="body_exited" from="Player/BumpArea" to="Player" method="_on_bump_area_body_exited"]
