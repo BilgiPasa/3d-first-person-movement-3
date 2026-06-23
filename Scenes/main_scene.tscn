@@ -17,8 +17,11 @@ background_mode = 2
 sky = SubResource("Sky_jv6wh")
 glow_enabled = true
 
-[node name="MainScene" type="Node3D" unique_id=1991236932]
+[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "speed_label", "pause_menu")]
 script = ExtResource("1_jv6wh")
+player_and_camera = NodePath("PlayerAndCamera")
+speed_label = NodePath("CanvasLayer/SpeedLabel")
+pause_menu = NodePath("CanvasLayer/PauseMenu")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=876222076]
 environment = SubResource("Environment_x6ack")
