@@ -7,7 +7,8 @@ extends RigidBody3D
 # Movement
 const NORMAL_SPEED: int = 9
 const RUN_SPEED: int = 12
-var current_move_speed: int
+const CROUCH_SPEED: int = 6
+var current_speed: int
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
@@ -22,10 +23,12 @@ var touching: bool = false
 var touched_body: Node3D = null
 
 # Ground Detection
+const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
 var grounded: bool = false
 var grounded_body: Node3D = null
 
 # Bump Detection
+const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
 var bumping: bool = false
 var bumped_body: Node3D = null
 
@@ -35,11 +38,13 @@ const CROUCH_HEIGHT: float = 1.5
 const PLAYER_RADIUS: float = 0.5
 
 # @export Variables
-@export var player_mesh: CapsuleMesh
-@export var player_collision_shape: CapsuleShape3D
+@export var player_capsule_mesh: CapsuleMesh
+@export var player_capsule_shape: CapsuleShape3D
 @export var camera_position: Node3D
 @export var grounded_area: Area3D
+@export var grounded_area_sphere_shape: SphereShape3D
 @export var bump_area: Area3D
+@export var bump_area_box_shape: BoxShape3D
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -48,13 +53,15 @@ func _ready() -> void:
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 10
-	player_mesh.height = PLAYER_HEIGHT
-	player_mesh.radius = PLAYER_RADIUS
-	player_collision_shape.height = PLAYER_HEIGHT
-	player_collision_shape.radius = PLAYER_RADIUS
+	player_capsule_mesh.height = PLAYER_HEIGHT
+	player_capsule_mesh.radius = PLAYER_RADIUS
+	player_capsule_shape.height = PLAYER_HEIGHT
+	player_capsule_shape.radius = PLAYER_RADIUS
 	camera_position.position.y = (PLAYER_HEIGHT / 2) - 0.25
 	grounded_area.position.y = -(PLAYER_HEIGHT / 2)
+	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
+	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 
 func _process(_delta: float) -> void:
 	# move_vector's X is X in 3D, Y is -Z in 3D. Also, it is normalized.
@@ -64,6 +71,14 @@ func _process(_delta: float) -> void:
 	run_input = Input.is_action_pressed("run")
 	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
+
+func _physics_process(delta: float) -> void:
+	if crouch_input:
+		current_speed = CROUCH_SPEED
+	elif run_input:
+		current_speed = RUN_SPEED
+	else:
+		current_speed = NORMAL_SPEED
 
 func _on_body_entered(body: Node) -> void:
 	if body == null:
