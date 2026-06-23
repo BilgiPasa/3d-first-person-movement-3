@@ -7,6 +7,7 @@ extends RigidBody3D
 # Movement
 const NORMAL_SPEED: int = 9
 const RUN_SPEED: int = 12
+var current_move_speed: int
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
@@ -29,7 +30,7 @@ const PLAYER_HEIGHT: float = 2.0
 const CROUCH_HEIGHT: float = 1.5
 const PLAYER_RADIUS: float = 0.5
 
-# Some Player Components
+# @export Variables
 @export var player_mesh: CapsuleMesh
 @export var player_coll_shape: CapsuleShape3D
 @export var camera_position: Node3D
@@ -39,6 +40,7 @@ const PLAYER_RADIUS: float = 0.5
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	can_sleep = false
+	lock_rotation = true
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 10

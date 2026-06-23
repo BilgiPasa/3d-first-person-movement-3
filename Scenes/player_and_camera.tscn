@@ -18,16 +18,11 @@ radius = 0.3
 [sub_resource type="BoxShape3D" id="BoxShape3D_5s483"]
 size = Vector3(0.6, 1.1, 0.1)
 
-[node name="PlayerAndCamera" type="Node3D" unique_id=1785156103 node_paths=PackedStringArray("player", "camera", "camera_position")]
+[node name="PlayerAndCamera" type="Node3D" unique_id=1785156103 node_paths=PackedStringArray("player", "camera_holder", "camera_position")]
 script = ExtResource("1_vu1q0")
 player = NodePath("Player")
-camera = NodePath("Camera3D")
+camera_holder = NodePath("CameraHolder")
 camera_position = NodePath("Player/CameraPosition")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1566701192]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
-cull_mask = 1048573
-fov = 90.0
 
 [node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "grounded_area", "bump_area")]
 collision_layer = 2
@@ -62,6 +57,13 @@ collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/BumpArea" unique_id=626794957]
 shape = SubResource("BoxShape3D_5s483")
+
+[node name="CameraHolder" type="Node3D" parent="." unique_id=683470626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=1566701192]
+cull_mask = 1048573
+fov = 90.0
 
 [connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]
 [connection signal="body_exited" from="Player" to="Player" method="_on_body_exited"]
