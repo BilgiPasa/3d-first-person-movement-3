@@ -12,16 +12,20 @@ const ZOOMED_CAM_ROT_MULT: float = 0.5
 var current_cam_rot_mult: float
 
 # Camera Zoom
+var normal_fov: int = 90
+var current_fov: int
 var camera_zoom_input: bool
 
 # @export Variables
 @export var player: Player
+@export var camera: Camera3D
 @export var camera_holder: Node3D
 @export var camera_position: Node3D
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	current_cam_rot_mult = NORMAL_CAM_ROT_MULT
+	current_fov = normal_fov
 
 # * Get camera rotation input
 func _unhandled_input(event: InputEvent) -> void:
@@ -44,6 +48,9 @@ func _process(_delta: float) -> void:
 	# * Handle camera rotation
 	camera_holder.rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0)
 	player.rotation_degrees = Vector3(0, y_rot_deg, 0)
+
+	# * Assign camera FOV
+	camera.fov = current_fov
 
 func get_player_speed() -> float:
 	return sqrt(pow(player.linear_velocity.x, 2) + pow(player.linear_velocity.z, 2))

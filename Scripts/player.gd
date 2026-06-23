@@ -17,12 +17,16 @@ var crouch_input: bool
 # Jump
 var jump_input: bool
 
-# Collision and Area Detection
+# Touch Detection
 var touching: bool = false
-var grounded: bool = false
-var bumping: bool = false
 var touched_body: Node3D = null
+
+# Ground Detection
+var grounded: bool = false
 var grounded_body: Node3D = null
+
+# Bump Detection
+var bumping: bool = false
 var bumped_body: Node3D = null
 
 # Player Sizes
@@ -32,7 +36,7 @@ const PLAYER_RADIUS: float = 0.5
 
 # @export Variables
 @export var player_mesh: CapsuleMesh
-@export var player_coll_shape: CapsuleShape3D
+@export var player_collision_shape: CapsuleShape3D
 @export var camera_position: Node3D
 @export var grounded_area: Area3D
 @export var bump_area: Area3D
@@ -46,8 +50,8 @@ func _ready() -> void:
 	max_contacts_reported = 10
 	player_mesh.height = PLAYER_HEIGHT
 	player_mesh.radius = PLAYER_RADIUS
-	player_coll_shape.height = PLAYER_HEIGHT
-	player_coll_shape.radius = PLAYER_RADIUS
+	player_collision_shape.height = PLAYER_HEIGHT
+	player_collision_shape.radius = PLAYER_RADIUS
 	camera_position.position.y = (PLAYER_HEIGHT / 2) - 0.25
 	grounded_area.position.y = -(PLAYER_HEIGHT / 2)
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
