@@ -12,13 +12,13 @@ const ZOOMED_CAM_ROT_MULT: float = 0.5
 var current_cam_rot_mult: float
 
 # Camera FOV
-var normal_fov: float = 90
-var sprint_fov: float
+var normal_fov: int = 90
+var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float
 
 # Camera Zoom
-var zooming_speed: float = 12
+var zooming_speed: int = 12
 var zoom_input: bool
 
 # @export Variables
@@ -70,14 +70,14 @@ func fov_change(process_delta: float) -> void:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
 		if !(Globals.dynamic_fov && player.current_state == player.States.RUNNING):
-			zoom_fov = normal_fov / 5
+			zoom_fov = normal_fov / 5.0
 
 			if camera.fov < zoom_fov + 0.01:
 				camera.fov = zoom_fov
 			else:
 				camera.fov = lerpf(camera.fov, zoom_fov, zooming_speed * process_delta)
 		else:
-			zoom_sprint_fov = (normal_fov + 10) / 5
+			zoom_sprint_fov = (normal_fov + 10) / 5.0
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov
