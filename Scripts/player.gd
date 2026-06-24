@@ -20,6 +20,10 @@ var crouch_input: bool
 var jumping: bool = false
 var jump_input: bool
 
+# Coyote Time
+const COYOTE_TIME_SECONDS: float = 0.15
+var coyote_time_counter: float
+
 # Player States
 enum States
 {
@@ -35,17 +39,14 @@ var current_state: States
 
 # Touch Detection
 var touching: bool = false
-var touched_body: Node3D = null
 
 # Ground Detection
 const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
 var grounded: bool = false
-var grounded_body: Node3D = null
 
 # Bump Detection
 const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
 var bumping: bool = false
-var bumped_body: Node3D = null
 
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.0
@@ -89,8 +90,20 @@ func _process(_delta: float) -> void:
 	jump_input = Input.is_action_pressed("jump")
 
 func _physics_process(delta: float) -> void:
+	touching = get_contact_count() > 0
+	grounded = grounded_area.has_overlapping_bodies()
+	bumping = bump_area.has_overlapping_bodies()
+	coyote_time(delta)
 	current_state = player_state_machine(current_state)
-	assign_current_speed()
+	move_speed_control()
+
+func coyote_time(physics_process_delta: float) -> void:
+	if grounded:
+		coyote_time_counter = COYOTE_TIME_SECONDS
+	elif coyote_time_counter <= 0:
+		coyote_time_counter = 0
+	else:
+		coyote_time_counter -= physics_process_delta
 
 func player_state_machine(state: States) -> States:
 	if state == States.IDLE:
@@ -144,7 +157,7 @@ func is_moving_with_WASD() -> bool:
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
-func assign_current_speed() -> void:
+func move_speed_control() -> void:
 	match current_state:
 		States.CROUCHING, States.CROUCH_WALKING:
 			move_speed = CROUCH_SPEED
@@ -153,32 +166,11 @@ func assign_current_speed() -> void:
 		_:
 			move_speed = NORMAL_SPEED
 
-func _on_body_entered(body: Node) -> void:
-	if body == null:
-		touched_body = body
-		touching = true
+	if abs(linear_velocity.z) <= MIN:
+		linear_velocity.z = 0
 
-func _on_body_exited(body: Node) -> void:
-	if body == touched_body:
-		touched_body = null
-		touching = false
+	if abs(linear_velocity.x) <= MIN:
+		linear_velocity.x = 0
 
-func _on_grounded_area_body_entered(body: Node3D) -> void:
-	if body == null:
-		grounded_body = body
-		grounded = true
-
-func _on_grounded_area_body_exited(body: Node3D) -> void:
-	if body == grounded_body:
-		grounded_body = null
-		grounded = false
-
-func _on_bump_area_body_entered(body: Node3D) -> void:
-	if body == null:
-		bumped_body = body
-		bumping = true
-
-func _on_bump_area_body_exited(body: Node3D) -> void:
-	if body == bumped_body:
-		bumped_body = null
-		bumping = false
+	if abs(linear_velocity.y) <= MIN:
+		linear_velocity.y = 0

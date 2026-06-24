@@ -71,10 +71,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=1566701192]
 cull_mask = 1048573
 fov = 90.0
-
-[connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]
-[connection signal="body_exited" from="Player" to="Player" method="_on_body_exited"]
-[connection signal="body_entered" from="Player/GroundedArea" to="Player" method="_on_grounded_area_body_entered"]
-[connection signal="body_exited" from="Player/GroundedArea" to="Player" method="_on_grounded_area_body_exited"]
-[connection signal="body_entered" from="Player/BumpArea" to="Player" method="_on_bump_area_body_entered"]
-[connection signal="body_exited" from="Player/BumpArea" to="Player" method="_on_bump_area_body_exited"]

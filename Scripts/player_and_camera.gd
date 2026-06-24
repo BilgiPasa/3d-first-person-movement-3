@@ -48,7 +48,7 @@ func camera_position_and_rotation() -> void:
 	camera_holder.rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0) # Rotate camera holder
 	player.rotation_degrees = Vector3(0, y_rot_deg, 0) # Rotate player
 
-func fov_change(proccess_delta: float) -> void:
+func fov_change(process_delta: float) -> void:
 	zoom_input = Input.is_action_pressed("camera_zoom") # Get camera_zoom input
 
 	if !zoom_input:
@@ -58,14 +58,14 @@ func fov_change(proccess_delta: float) -> void:
 			if camera.fov > normal_fov - 0.01 && camera.fov < normal_fov + 0.01:
 				camera.fov = normal_fov
 			else:
-				camera.fov = lerpf(camera.fov, normal_fov, zooming_speed * proccess_delta)
+				camera.fov = lerpf(camera.fov, normal_fov, zooming_speed * process_delta)
 		else:
 			sprint_fov = normal_fov + 10
 
 			if camera.fov > sprint_fov - 0.01:
 				camera.fov = sprint_fov
 			else:
-				camera.fov = lerpf(camera.fov, sprint_fov, zooming_speed * proccess_delta)
+				camera.fov = lerpf(camera.fov, sprint_fov, zooming_speed * process_delta)
 	else:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
@@ -75,14 +75,14 @@ func fov_change(proccess_delta: float) -> void:
 			if camera.fov < zoom_fov + 0.01:
 				camera.fov = zoom_fov
 			else:
-				camera.fov = lerpf(camera.fov, zoom_fov, zooming_speed * proccess_delta)
+				camera.fov = lerpf(camera.fov, zoom_fov, zooming_speed * process_delta)
 		else:
 			zoom_sprint_fov = (normal_fov + 10) / 5
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov
 			else:
-				camera.fov = lerpf(camera.fov, zoom_sprint_fov, zooming_speed * proccess_delta)
+				camera.fov = lerpf(camera.fov, zoom_sprint_fov, zooming_speed * process_delta)
 
 func get_player_speed() -> float:
 	return player.get_speed()
