@@ -41,8 +41,8 @@ var current_state: States
 var touching: bool = false
 
 # Ground Detection
-const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
-var grounded: bool = false
+const GROUNDED_AREAS_SPHERE_RADIUS: float = 0.3
+var normal_grounded: bool = false
 
 # Bump Detection
 const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
@@ -57,8 +57,8 @@ const PLAYER_RADIUS: float = 0.5
 @export var player_capsule_mesh: CapsuleMesh
 @export var player_capsule_shape: CapsuleShape3D
 @export var camera_position: Node3D
-@export var grounded_area: Area3D
-@export var grounded_area_sphere_shape: SphereShape3D
+@export var normal_grounded_area: Area3D
+@export var norm_gded_area_sphere_shape: SphereShape3D # Normal Grounded Area Sphere Shape
 @export var bump_area: Area3D
 @export var bump_area_box_shape: BoxShape3D
 
@@ -74,8 +74,8 @@ func _ready() -> void:
 	player_capsule_shape.height = PLAYER_HEIGHT
 	player_capsule_shape.radius = PLAYER_RADIUS
 	camera_position.position.y = (PLAYER_HEIGHT / 2) - 0.25
-	grounded_area.position.y = -(PLAYER_HEIGHT / 2)
-	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
+	normal_grounded_area.position.y = -(PLAYER_HEIGHT / 2)
+	norm_gded_area_sphere_shape.radius = GROUNDED_AREAS_SPHERE_RADIUS
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 
@@ -91,14 +91,14 @@ func _process(_delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	touching = get_contact_count() > 0
-	grounded = grounded_area.has_overlapping_bodies()
+	normal_grounded = normal_grounded_area.has_overlapping_bodies()
 	bumping = bump_area.has_overlapping_bodies()
 	coyote_time(delta)
 	current_state = player_state_machine(current_state)
 	move_speed_control()
 
 func coyote_time(physics_process_delta: float) -> void:
-	if grounded:
+	if normal_grounded:
 		coyote_time_counter = COYOTE_TIME_SECONDS
 	elif coyote_time_counter <= 0:
 		coyote_time_counter = 0
