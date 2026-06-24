@@ -13,8 +13,11 @@ var current_cam_rot_mult: float
 
 # Camera Zoom
 var normal_fov: int = 90
+var sprint_fov: int
+var zoom_fov: int
+var zoom_sprint_fov: int
 var current_fov: int
-var camera_zoom_input: bool
+var zoom_input: bool
 
 # @export Variables
 @export var player: Player
@@ -34,23 +37,26 @@ func _unhandled_input(event: InputEvent) -> void:
 		x_rot_deg -= event.relative.y * mouse_sensitivity * current_cam_rot_mult * 0.001
 		x_rot_deg = clamp(x_rot_deg, -90, 90)
 
-		# For testing
-		#print(camera_holder.rotation_degrees)
-		#print(player.rotation_degrees)
-
 func _process(_delta: float) -> void:
-	# * Get camera_zoom input
-	camera_zoom_input = Input.is_action_pressed("camera_zoom")
+	camera_position_and_rotation()
+	fov_change()
 
-	# * Move camera holder to camera position
-	camera_holder.position = camera_position.position
+func camera_position_and_rotation() -> void:
+	camera_holder.position = camera_position.position # Move camera holder to camera position
+	camera_holder.rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0) # Rotate camera holder
+	player.rotation_degrees = Vector3(0, y_rot_deg, 0) # Rotate player
 
-	# * Handle camera rotation
-	camera_holder.rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0)
-	player.rotation_degrees = Vector3(0, y_rot_deg, 0)
+func fov_change() -> void:
+	zoom_input = Input.is_action_pressed("camera_zoom") # Get camera_zoom input
 
-	# * Assign camera FOV
-	camera.fov = current_fov
+	if !zoom_input:
+		current_cam_rot_mult = NORMAL_CAM_ROT_MULT
+		# TODO: Add more code
+	else:
+		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
+		# TODO: Add more code
+
+	camera.fov = current_fov # Assign camera FOV
 
 func get_player_speed() -> float:
 	return sqrt(pow(player.linear_velocity.x, 2) + pow(player.linear_velocity.z, 2))

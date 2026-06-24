@@ -63,6 +63,7 @@ func _ready() -> void:
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 
+# * Get inputs
 func _process(_delta: float) -> void:
 	# move_vector's X is X in 3D, Y is -Z in 3D. Also, it is normalized.
 	move_vector = Vector2(Input.get_axis("move_left", "move_right"), Input.get_axis("move_back", "move_forward")).normalized()
@@ -73,6 +74,9 @@ func _process(_delta: float) -> void:
 	jump_input = Input.is_action_pressed("jump")
 
 func _physics_process(delta: float) -> void:
+	assign_current_speed()
+
+func assign_current_speed() -> void:
 	if crouch_input:
 		current_speed = CROUCH_SPEED
 	elif run_input:
