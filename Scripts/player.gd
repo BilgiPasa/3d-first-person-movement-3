@@ -8,7 +8,8 @@ extends RigidBody3D
 const NORMAL_SPEED: int = 9
 const RUN_SPEED: int = 12
 const CROUCH_SPEED: int = 6
-var current_speed: int
+const MIN: float = 0.1
+var move_speed: int
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
@@ -16,7 +17,21 @@ var move_vector: Vector2 # X is X, Y is -Z.
 var crouch_input: bool
 
 # Jump
+var jumping: bool = false
 var jump_input: bool
+
+# Player States
+enum States
+{
+	IDLE,
+	WALKING,
+	RUNNING,
+	CROUCHING,
+	CROUCH_WALKING
+}
+
+# Player State Variable
+var current_state: States
 
 # Touch Detection
 var touching: bool = false
@@ -52,7 +67,7 @@ func _ready() -> void:
 	lock_rotation = true
 	continuous_cd = true
 	contact_monitor = true
-	max_contacts_reported = 10
+	max_contacts_reported = 8
 	player_capsule_mesh.height = PLAYER_HEIGHT
 	player_capsule_mesh.radius = PLAYER_RADIUS
 	player_capsule_shape.height = PLAYER_HEIGHT
@@ -69,20 +84,73 @@ func _process(_delta: float) -> void:
 	move_vector = Vector2(Input.get_axis("move_left", "move_right"), Input.get_axis("move_back", "move_forward")).normalized()
 
 	# Other inputs
-	run_input = Input.is_action_pressed("run")
+	run_input = Input.is_action_pressed("run") && Input.is_action_pressed("move_forward")
 	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
 
 func _physics_process(delta: float) -> void:
+	current_state = player_state_machine(current_state)
 	assign_current_speed()
 
-func assign_current_speed() -> void:
-	if crouch_input:
-		current_speed = CROUCH_SPEED
-	elif run_input:
-		current_speed = RUN_SPEED
+func player_state_machine(state: States) -> States:
+	if state == States.IDLE:
+		if is_moving_with_WASD():
+			return States.WALKING
+		else:
+			if crouch_input:
+				return States.CROUCHING
+			else:
+				return States.IDLE
+	elif state == States.CROUCHING:
+		if is_moving_with_WASD():
+			return States.CROUCH_WALKING
+		else:
+			if crouch_input:
+				return States.CROUCHING
+			else:
+				return States.IDLE
+	elif state == States.WALKING:
+		if is_moving_with_WASD():
+			if crouch_input:
+				return States.CROUCH_WALKING
+			elif run_input:
+				return States.RUNNING
+			else:
+				return States.WALKING
+		else:
+			return States.IDLE
+	elif state == States.RUNNING:
+		if is_moving_with_WASD():
+			if run_input:
+				return States.RUNNING
+			else:
+				return States.WALKING
+		else:
+			return States.IDLE
+	elif state == States.CROUCH_WALKING:
+		if is_moving_with_WASD():
+			if crouch_input:
+				return States.CROUCH_WALKING
+			else:
+				return States.WALKING
+		else:
+			return States.CROUCHING
 	else:
-		current_speed = NORMAL_SPEED
+		return States.IDLE
+
+func is_moving_with_WASD() -> bool:
+	return move_vector.length() > MIN && get_speed() > MIN
+
+func get_speed() -> float:
+	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
+
+func assign_current_speed() -> void:
+	if current_state == States.CROUCH_WALKING:
+		move_speed = CROUCH_SPEED
+	elif current_state == States.RUNNING:
+		move_speed = RUN_SPEED
+	else:
+		move_speed = NORMAL_SPEED
 
 func _on_body_entered(body: Node) -> void:
 	if body == null:
