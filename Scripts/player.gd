@@ -145,12 +145,13 @@ func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
 func assign_current_speed() -> void:
-	if current_state == States.CROUCH_WALKING:
-		move_speed = CROUCH_SPEED
-	elif current_state == States.RUNNING:
-		move_speed = RUN_SPEED
-	else:
-		move_speed = NORMAL_SPEED
+	match current_state:
+		States.CROUCHING, States.CROUCH_WALKING:
+			move_speed = CROUCH_SPEED
+		States.RUNNING:
+			move_speed = RUN_SPEED
+		_:
+			move_speed = NORMAL_SPEED
 
 func _on_body_entered(body: Node) -> void:
 	if body == null:
