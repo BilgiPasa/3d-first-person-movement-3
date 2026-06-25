@@ -7,13 +7,13 @@ extends RigidBody3D
 # Movement
 const NORMAL_SPEED: int = 9
 const RUN_SPEED: int = 12
-const CROUCH_SPEED: int = 6
 const MIN: float = 0.1
 var move_speed: int
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
 # Crouch
+const CROUCH_SPEED: int = 6
 var crouch_input: bool
 
 # Jump
@@ -38,15 +38,15 @@ enum States
 var current_state: States
 
 # Touch Detection
-var touching: bool = false
+var touching: bool
 
 # Ground Detection
 const GROUNDED_AREAS_SPHERE_RADIUS: float = 0.3
-var normal_grounded: bool = false
+var normal_grounded: bool
 
 # Bump Detection
 const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
-var bumping: bool = false
+var bumping: bool
 
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.0
