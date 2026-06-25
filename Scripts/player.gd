@@ -17,6 +17,10 @@ const CROUCH_SPEED: int = 6
 var crouch_input: bool
 
 # Jump
+const CAN_JUMP_TIMER_SECONDS: float = 0.3
+const JUMPING_TIMER_SECONDS: float = 0.1
+var normal_jump_force: int = 10
+var can_jump: bool = true
 var jumping: bool = false
 var jump_input: bool
 
@@ -48,6 +52,9 @@ var normal_grounded: bool
 const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
 var bumping: bool
 
+# Player Rotation
+var degrees_to_rotate: float # This variable is assigned by the player_and_camera script
+
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.0
 const CROUCH_HEIGHT: float = 1.5
@@ -61,9 +68,10 @@ const PLAYER_RADIUS: float = 0.5
 @export var norm_gded_area_sphere_shape: SphereShape3D # Normal Grounded Area Sphere Shape
 @export var bump_area: Area3D
 @export var bump_area_box_shape: BoxShape3D
+@export var can_jump_timer: Timer
+@export var jumping_timer: Timer
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_PAUSABLE
 	can_sleep = false
 	lock_rotation = true
 	continuous_cd = true
@@ -78,6 +86,8 @@ func _ready() -> void:
 	norm_gded_area_sphere_shape.radius = GROUNDED_AREAS_SPHERE_RADIUS
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
+	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
+	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -89,13 +99,60 @@ func _process(_delta: float) -> void:
 	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
 
+# * Handle physics
+func _integrate_forces(_state: PhysicsDirectBodyState3D) -> void:
+	rotation_degrees.y = degrees_to_rotate
+	jump()
+	move_speed_control()
+
+func jump() -> void:
+	if jump_input && can_jump && !jumping && ((touching && normal_grounded) || (!normal_grounded && coyote_time_counter > 0)):
+		execute_jump(normal_jump_force)
+
+func execute_jump(jump_force: int) -> void:
+	can_jump = false
+	jumping = true
+	linear_velocity.y = jump_force
+	can_jump_timer.start()
+	jumping_timer.start()
+
+func _on_can_jump_timer_timeout() -> void:
+	# Reset can_jump and reset the timer
+	can_jump = true
+	can_jump_timer.stop()
+	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
+
+func _on_jumping_timer_timeout() -> void:
+	# Reset jumping and reset the timer
+	jumping = false
+	jumping_timer.stop()
+	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
+
+func move_speed_control() -> void:
+	match current_state:
+		States.CROUCHING, States.CROUCH_WALKING:
+			move_speed = CROUCH_SPEED
+		States.RUNNING:
+			move_speed = RUN_SPEED
+		_:
+			move_speed = NORMAL_SPEED
+
+	if abs(linear_velocity.z) <= MIN:
+		linear_velocity.z = 0
+
+	if abs(linear_velocity.x) <= MIN:
+		linear_velocity.x = 0
+
+	if abs(linear_velocity.y) <= MIN:
+		linear_velocity.y = 0
+
+# * Handle other things
 func _physics_process(delta: float) -> void:
 	touching = get_contact_count() > 0
 	normal_grounded = normal_grounded_area.has_overlapping_bodies()
 	bumping = bump_area.has_overlapping_bodies()
 	coyote_time(delta)
 	current_state = player_state_machine(current_state)
-	move_speed_control()
 
 func coyote_time(physics_process_delta: float) -> void:
 	if normal_grounded:
@@ -156,21 +213,3 @@ func is_moving_with_WASD() -> bool:
 
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
-
-func move_speed_control() -> void:
-	match current_state:
-		States.CROUCHING, States.CROUCH_WALKING:
-			move_speed = CROUCH_SPEED
-		States.RUNNING:
-			move_speed = RUN_SPEED
-		_:
-			move_speed = NORMAL_SPEED
-
-	if abs(linear_velocity.z) <= MIN:
-		linear_velocity.z = 0
-
-	if abs(linear_velocity.x) <= MIN:
-		linear_velocity.x = 0
-
-	if abs(linear_velocity.y) <= MIN:
-		linear_velocity.y = 0
