@@ -75,7 +75,7 @@ camera_zoom={
 
 3d_render/layer_1="Default"
 3d_render/layer_2="Player"
-3d_physics/layer_1="GroundLayer"
+3d_physics/layer_1="Ground"
 3d_physics/layer_2="Player"
 
 [physics]
