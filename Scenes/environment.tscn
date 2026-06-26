@@ -32,10 +32,11 @@ size = Vector3(2, 0.1, 2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_7lsjx"]
 size = Vector3(2, 0.1, 2)
 
-[node name="NormalEnvironment" type="Node3D" unique_id=2118310843]
+[node name="Environment" type="Node3D" unique_id=2118310843]
 
 [node name="MainGround" type="StaticBody3D" parent="." unique_id=737079153]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+collision_mask = 0
 physics_material_override = ExtResource("1_r42gm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainGround" unique_id=2055585675]
@@ -46,6 +47,7 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Ramp1" type="StaticBody3D" parent="." unique_id=1396985660]
 transform = Transform3D(1, 8.742278e-08, 1.5142069e-07, 0, 0.8660254, -0.5, -1.7484555e-07, 0.5, 0.8660254, 5, 2.45, -15)
+collision_mask = 0
 physics_material_override = ExtResource("1_r42gm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp1" unique_id=754491469]
@@ -56,6 +58,7 @@ shape = SubResource("BoxShape3D_r07tb")
 
 [node name="SmallPlatform" type="StaticBody3D" parent="." unique_id=796699435]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4.943, -20.305)
+collision_mask = 0
 physics_material_override = ExtResource("1_r42gm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SmallPlatform" unique_id=807366739]

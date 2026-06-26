@@ -7,6 +7,8 @@ extends RigidBody3D
 # Movement
 const NORMAL_SPEED: int = 9
 const RUN_SPEED: int = 12
+const GROUND_LINEAR_DAMP: int = 10
+const AIR_LINEAR_DAMP: float = 0.04
 const MIN: float = 0.1
 var move_speed: int
 var run_input: bool
@@ -19,7 +21,7 @@ var crouch_input: bool
 # Jump
 const CAN_JUMP_TIMER_SECONDS: float = 0.3
 const JUMPING_TIMER_SECONDS: float = 0.1
-var normal_jump_force: int = 10
+var jump_force: int = 12
 var can_jump: bool = true
 var jumping: bool = false
 var jump_input: bool
@@ -45,8 +47,8 @@ var current_state: States
 var touching: bool
 
 # Ground Detection
-const GROUNDED_AREAS_SPHERE_RADIUS: float = 0.3
-var normal_grounded: bool
+const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
+var grounded: bool
 
 # Bump Detection
 const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
@@ -64,8 +66,8 @@ const PLAYER_RADIUS: float = 0.5
 @export var player_capsule_mesh: CapsuleMesh
 @export var player_capsule_shape: CapsuleShape3D
 @export var camera_position: Node3D
-@export var normal_grounded_area: Area3D
-@export var norm_gded_area_sphere_shape: SphereShape3D # Normal Grounded Area Sphere Shape
+@export var grounded_area: Area3D
+@export var grounded_area_sphere_shape: SphereShape3D
 @export var bump_area: Area3D
 @export var bump_area_box_shape: BoxShape3D
 @export var can_jump_timer: Timer
@@ -82,8 +84,8 @@ func _ready() -> void:
 	player_capsule_shape.height = PLAYER_HEIGHT
 	player_capsule_shape.radius = PLAYER_RADIUS
 	camera_position.position.y = (PLAYER_HEIGHT / 2) - 0.25
-	normal_grounded_area.position.y = -(PLAYER_HEIGHT / 2)
-	norm_gded_area_sphere_shape.radius = GROUNDED_AREAS_SPHERE_RADIUS
+	grounded_area.position.y = -(PLAYER_HEIGHT / 2)
+	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
 	bump_area.position.z = -(PLAYER_RADIUS / 2)
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
@@ -99,22 +101,20 @@ func _process(_delta: float) -> void:
 	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
 
-# * Handle physics
+# * Handle things about forces, velocity and rotation
+# Don't use the "_state" because it does not work as I wanted.
 func _integrate_forces(_state: PhysicsDirectBodyState3D) -> void:
 	rotation_degrees.y = degrees_to_rotate
 	jump()
 	move_speed_control()
 
 func jump() -> void:
-	if jump_input && can_jump && !jumping && ((touching && normal_grounded) || (!normal_grounded && coyote_time_counter > 0)):
-		execute_jump(normal_jump_force)
-
-func execute_jump(jump_force: int) -> void:
-	can_jump = false
-	jumping = true
-	linear_velocity.y = jump_force
-	can_jump_timer.start()
-	jumping_timer.start()
+	if jump_input && can_jump && !jumping && ((touching && grounded) || (!grounded && coyote_time_counter > 0)):
+		can_jump = false
+		jumping = true
+		linear_velocity.y = jump_force
+		can_jump_timer.start()
+		jumping_timer.start()
 
 func _on_can_jump_timer_timeout() -> void:
 	# Reset can_jump and reset the timer
@@ -149,18 +149,25 @@ func move_speed_control() -> void:
 # * Handle other things
 func _physics_process(delta: float) -> void:
 	touching = get_contact_count() > 0
-	normal_grounded = normal_grounded_area.has_overlapping_bodies()
+	grounded = grounded_area.has_overlapping_bodies()
 	bumping = bump_area.has_overlapping_bodies()
 	coyote_time(delta)
+	handle_linear_damp()
 	current_state = player_state_machine(current_state)
 
 func coyote_time(physics_process_delta: float) -> void:
-	if normal_grounded:
+	if grounded:
 		coyote_time_counter = COYOTE_TIME_SECONDS
 	elif coyote_time_counter <= 0:
 		coyote_time_counter = 0
 	else:
 		coyote_time_counter -= physics_process_delta
+
+func handle_linear_damp():
+	if grounded && !jumping:
+		linear_damp = GROUND_LINEAR_DAMP
+	else:
+		linear_damp = AIR_LINEAR_DAMP
 
 func player_state_machine(state: States) -> States:
 	if state == States.IDLE:
@@ -194,7 +201,10 @@ func player_state_machine(state: States) -> States:
 			if run_input:
 				return States.RUNNING
 			else:
-				return States.WALKING
+				if bumping:
+					return States.WALKING
+				else:
+					return States.RUNNING
 		else:
 			return States.IDLE
 	elif state == States.CROUCH_WALKING:

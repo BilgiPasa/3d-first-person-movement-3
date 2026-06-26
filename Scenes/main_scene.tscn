@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cx3nf532photv" path="res://Scenes/player_and_camera.tscn" id="1_52fb6"]
 [ext_resource type="Script" uid="uid://y0aegwbe0ac2" path="res://Scripts/main_scene.gd" id="1_jv6wh"]
 [ext_resource type="PackedScene" uid="uid://dgswa7otbkuth" path="res://Scenes/pause_menu.tscn" id="2_6l7je"]
-[ext_resource type="PackedScene" uid="uid://2ipg0oj6jbv1" path="res://Scenes/normal_environment.tscn" id="4_x6ack"]
+[ext_resource type="PackedScene" uid="uid://2ipg0oj6jbv1" path="res://Scenes/environment.tscn" id="2_x6ack"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6l7je"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -30,10 +30,10 @@ environment = SubResource("Environment_x6ack")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
+[node name="Environment" parent="." unique_id=2118310843 instance=ExtResource("2_x6ack")]
+
 [node name="PlayerAndCamera" parent="." unique_id=1785156103 instance=ExtResource("1_52fb6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="NormalEnvironment" parent="." unique_id=2118310843 instance=ExtResource("4_x6ack")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1161452187]
 
