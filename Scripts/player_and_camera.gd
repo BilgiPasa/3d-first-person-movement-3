@@ -46,7 +46,7 @@ func _process(delta: float) -> void:
 func camera_position_and_rotation() -> void:
 	camera_holder.global_position = camera_position.global_position # Move camera holder to camera position
 	camera_holder.rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0) # Rotate camera holder
-	player.degrees_to_rotate = y_rot_deg # Assign rotation degrees for player
+	player.y_rot_deg = y_rot_deg # Assign rotation degrees for player
 
 func fov_change(process_delta: float) -> void:
 	zoom_input = Input.is_action_pressed("camera_zoom") # Get camera_zoom input
