@@ -16,7 +16,6 @@ var normal_fov: int = 90
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float
-var dynamic_fov: bool = true
 
 # Camera Zoom
 var zooming_speed: int = 12
@@ -55,7 +54,7 @@ func fov_change(process_delta: float) -> void:
 	if !zoom_input:
 		current_cam_rot_mult = NORMAL_CAM_ROT_MULT
 
-		if !(dynamic_fov && player.current_state == player.States.RUNNING):
+		if !(Globals.dynamic_fov && player.current_state == player.States.RUNNING):
 			if camera.fov > normal_fov - 0.01 && camera.fov < normal_fov + 0.01:
 				camera.fov = normal_fov
 			else:
@@ -70,7 +69,7 @@ func fov_change(process_delta: float) -> void:
 	else:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
-		if !(dynamic_fov && player.current_state == player.States.RUNNING):
+		if !(Globals.dynamic_fov && player.current_state == player.States.RUNNING):
 			zoom_fov = normal_fov / 5.0
 
 			if camera.fov < zoom_fov + 0.01:
