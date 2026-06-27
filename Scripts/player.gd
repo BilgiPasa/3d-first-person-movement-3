@@ -15,7 +15,7 @@ var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
 # Crouch
-var crouch_speed: float = Defaults.normal_speed * 3.0 / 4.0
+var crouch_speed: float = Defaults.normal_speed * 2.0 / 3.0
 var crouch_input: bool
 
 # Jump
