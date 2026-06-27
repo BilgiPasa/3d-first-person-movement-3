@@ -70,7 +70,7 @@ collision_layer = 2
 shape = SubResource("SphereShape3D_5s483")
 
 [node name="BumpArea" type="Area3D" parent="Player" unique_id=81583961]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.55)
 collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/BumpArea" unique_id=626794957]

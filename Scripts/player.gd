@@ -101,7 +101,7 @@ func _ready() -> void:
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	grounded_area.position.y = -PLAYER_HEIGHT / 2
 	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
-	bump_area.position.z = -PLAYER_RADIUS / 2
+	bump_area.position.z = -(PLAYER_RADIUS + BUMP_AREA_BOX_SIZE.z / 2)
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 
 # * Get inputs
