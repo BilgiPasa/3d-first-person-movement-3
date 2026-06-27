@@ -185,7 +185,7 @@ func movement(physics_process_delta: float) -> void:
 		if (trying_to_go_right_in_air && relative_velocity_in_air.x > move_speed) || (trying_to_go_left_in_air && relative_velocity_in_air.x < -move_speed):
 			move_vector.x = 0
 
-		if relative_velocity_in_air.length() > move_speed:
+		if get_speed() > move_speed:
 			if (trying_to_go_forward_in_air && relative_velocity_in_air.z > -move_speed && relative_velocity_in_air.z < -move_speed * 0.4 && trying_to_go_right_in_air && relative_velocity_in_air.x < move_speed && relative_velocity_in_air.x > move_speed * 0.4) || (trying_to_go_forward_in_air && relative_velocity_in_air.z > -move_speed && relative_velocity_in_air.z < -move_speed * 0.4 && trying_to_go_left_in_air && relative_velocity_in_air.x > -move_speed && relative_velocity_in_air.x < -move_speed * 0.4) || (trying_to_go_back_in_air && relative_velocity_in_air.z < move_speed && relative_velocity_in_air.z > move_speed * 0.4 && trying_to_go_right_in_air && relative_velocity_in_air.x < move_speed && relative_velocity_in_air.x > move_speed * 0.4) || (trying_to_go_back_in_air && relative_velocity_in_air.z < move_speed && relative_velocity_in_air.z > move_speed * 0.4 && trying_to_go_left_in_air && relative_velocity_in_air.x > -move_speed && relative_velocity_in_air.x < -move_speed * 0.4):
 				move_vector.z = 0
 				move_vector.x = 0
