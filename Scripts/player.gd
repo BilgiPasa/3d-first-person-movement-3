@@ -9,13 +9,13 @@ const GROUND_LINEAR_DAMP: int = 10
 const AIR_LINEAR_DAMP: float = 0.04
 const MIN: float = 0.1
 var normal_speed: int = Defaults.normal_speed
-var run_speed: float = Defaults.normal_speed * 4 / 3
+var run_speed: float = Defaults.normal_speed * 4.0 / 3.0
 var move_speed: float
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
 # Crouch
-var crouch_speed: float = Defaults.normal_speed * 3 / 4
+var crouch_speed: float = Defaults.normal_speed * 3.0 / 4.0
 var crouch_input: bool
 
 # Jump
