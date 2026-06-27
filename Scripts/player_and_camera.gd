@@ -2,7 +2,7 @@ class_name PlayerAndCamera
 extends Node3D
 
 # Camera Rotation
-var mouse_sensitivity: int = 100
+var mouse_sensitivity: int = Defaults.mouse_sensitivity
 var x_rot_deg: float = 0
 var y_rot_deg: float = 0
 
@@ -12,7 +12,7 @@ const ZOOMED_CAM_ROT_MULT: float = 0.5
 var current_cam_rot_mult: float
 
 # Camera FOV
-var normal_fov: int = 90
+var normal_fov: int = Defaults.normal_fov
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float

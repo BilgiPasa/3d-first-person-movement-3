@@ -5,23 +5,23 @@ extends RigidBody3D
 # Note2: I have set the layers and the masks in the editor.
 
 # Movement
-const NORMAL_SPEED: int = 9
-const RUN_SPEED: int = 12
 const GROUND_LINEAR_DAMP: int = 10
 const AIR_LINEAR_DAMP: float = 0.04
 const MIN: float = 0.1
-var move_speed: int
+var normal_speed: int = Defaults.normal_speed
+var run_speed: float = Defaults.normal_speed * 4 / 3
+var move_speed: float
 var run_input: bool
 var move_vector: Vector2 # X is X, Y is -Z.
 
 # Crouch
-const CROUCH_SPEED: int = 6
+var crouch_speed: float = Defaults.normal_speed * 3 / 4
 var crouch_input: bool
 
 # Jump
 const CAN_JUMP_TIMER_SECONDS: float = 0.3
-const JUMPING_TIMER_SECONDS: float = 0.1
-var jump_force: int = 12
+const JUMPING_TIMER_SECONDS: float = 0.15
+var jump_force: int = Defaults.jump_force
 var can_jump: bool = true
 var jumping: bool = false
 var jump_input: bool
@@ -131,11 +131,11 @@ func _on_jumping_timer_timeout() -> void:
 func move_speed_control() -> void:
 	match current_state:
 		States.CROUCHING, States.CROUCH_WALKING:
-			move_speed = CROUCH_SPEED
+			move_speed = crouch_speed
 		States.RUNNING:
-			move_speed = RUN_SPEED
+			move_speed = run_speed
 		_:
-			move_speed = NORMAL_SPEED
+			move_speed = normal_speed
 
 	if abs(linear_velocity.z) <= MIN:
 		linear_velocity.z = 0
