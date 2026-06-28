@@ -5,24 +5,27 @@ extends RigidBody3D
 # Note2: I have set the layers and the masks in the editor.
 
 # Movement
-const AIR_MOVE_MULT: int = 200
-const GROUND_MOVE_MULT: float = 750.005
+const AIR_MOVE_MULT: int = 100
+const GROUND_MOVE_MULT: float = 750.01
 const GROUND_LINEAR_DAMP: float = 12.4
-const AIR_LINEAR_DAMP: float = 0.04
+const AIR_LINEAR_DAMP: float = 0.001
 const MIN: float = 0.1
 var normal_speed: int = Defaults.normal_speed
 var run_speed: float = Defaults.normal_speed * 4.0 / 3.0
 var move_speed: float
 var run_input: bool
+var trying_to_go_forward: bool
 var air_damp_active: bool
 var on_slope: bool
+var move_vector: Vector3
+var move_vector_relative_to_world: Vector3
+var lin_vel_in_air_relative_to_cam: Vector3 # linear velocity in air relative to camera
+
+# For optimization in movement
 var trying_to_go_forward_in_air: bool
 var trying_to_go_back_in_air: bool
 var trying_to_go_right_in_air: bool
 var trying_to_go_left_in_air: bool
-var move_vector: Vector3
-var relative_move_vector: Vector3 # move vector relative to camera
-var relative_velocity_in_air: Vector3 # velocity in air relative to camera
 
 # Crouch
 var crouch_speed: float = Defaults.normal_speed * 2.0 / 3.0
@@ -85,6 +88,7 @@ const PLAYER_RADIUS: float = 0.5
 @export var bump_area_box_shape: BoxShape3D
 
 func _ready() -> void:
+	mass = 75
 	can_sleep = false
 	lock_rotation = true
 	continuous_cd = true
@@ -106,12 +110,13 @@ func _ready() -> void:
 
 # * Get inputs
 func _process(_delta: float) -> void:
-	run_input = Input.is_action_pressed("run")
-	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
+	crouch_input = Input.is_action_pressed("crouch")
+	run_input = Input.is_action_pressed("run") && Input.is_action_pressed("move_forward")
 
 	# Forward is -Z, Backwards is Z, Right is X, Left is -X
 	move_vector = Vector3(Input.get_axis("move_left", "move_right"), 0, -Input.get_axis("move_back", "move_forward")).normalized()
+	trying_to_go_forward = move_vector.z < -MIN
 
 # * Handle other things
 func _physics_process(delta: float) -> void:
@@ -166,65 +171,65 @@ func movement(physics_process_delta: float) -> void:
 	on_slope = slope_ray_cast.is_colliding() && slope_ray_cast.get_collision_normal() != Vector3.UP
 
 	if !air_damp_active:
-		relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+		move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 
 		if !on_slope:
-			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * relative_move_vector)
+			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world)
 		else:
-			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * relative_move_vector.project(slope_ray_cast.get_collision_normal()))
+			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.project(slope_ray_cast.get_collision_normal()))
 	else:
-		relative_velocity_in_air = rotate_vector_around_y_axis(linear_velocity, -deg_to_rad(y_rot_deg))
-		trying_to_go_forward_in_air = move_vector.z < -MIN
+		lin_vel_in_air_relative_to_cam = rotate_vector_around_y_axis(linear_velocity, -deg_to_rad(y_rot_deg))
+		trying_to_go_forward_in_air = trying_to_go_forward
 		trying_to_go_back_in_air = move_vector.z > MIN
 		trying_to_go_right_in_air = move_vector.x > MIN
 		trying_to_go_left_in_air = move_vector.x < -MIN
 
-		if (trying_to_go_forward_in_air && relative_velocity_in_air.z < -move_speed) || (trying_to_go_back_in_air && relative_velocity_in_air.z > move_speed):
+		if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed):
 			move_vector.z = 0
 
-		if (trying_to_go_right_in_air && relative_velocity_in_air.x > move_speed) || (trying_to_go_left_in_air && relative_velocity_in_air.x < -move_speed):
+		if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed):
 			move_vector.x = 0
 
 		if get_speed() > move_speed:
-			if (trying_to_go_forward_in_air && relative_velocity_in_air.z > -move_speed && relative_velocity_in_air.z < -move_speed * 0.4 && trying_to_go_right_in_air && relative_velocity_in_air.x < move_speed && relative_velocity_in_air.x > move_speed * 0.4) || (trying_to_go_forward_in_air && relative_velocity_in_air.z > -move_speed && relative_velocity_in_air.z < -move_speed * 0.4 && trying_to_go_left_in_air && relative_velocity_in_air.x > -move_speed && relative_velocity_in_air.x < -move_speed * 0.4) || (trying_to_go_back_in_air && relative_velocity_in_air.z < move_speed && relative_velocity_in_air.z > move_speed * 0.4 && trying_to_go_right_in_air && relative_velocity_in_air.x < move_speed && relative_velocity_in_air.x > move_speed * 0.4) || (trying_to_go_back_in_air && relative_velocity_in_air.z < move_speed && relative_velocity_in_air.z > move_speed * 0.4 && trying_to_go_left_in_air && relative_velocity_in_air.x > -move_speed && relative_velocity_in_air.x < -move_speed * 0.4):
+			if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4):
 				move_vector.z = 0
 				move_vector.x = 0
 			else:
-				if (trying_to_go_forward_in_air && relative_velocity_in_air.z < -move_speed / 2) || (trying_to_go_back_in_air && relative_velocity_in_air.z > move_speed / 2):
+				if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
 					move_vector.z = 0
 				else:
-					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && relative_velocity_in_air.z > MIN) && !(trying_to_go_back_in_air && relative_velocity_in_air.z < -MIN):
-						if relative_velocity_in_air.x > move_speed:
-							relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(relative_move_vector.z) * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
-						elif relative_velocity_in_air.x < -move_speed:
-							relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(relative_move_vector.z) * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
+					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > MIN) && !(trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < -MIN):
+						if lin_vel_in_air_relative_to_cam.x > move_speed:
+							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
+						elif lin_vel_in_air_relative_to_cam.x < -move_speed:
+							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
 
-				if (trying_to_go_right_in_air && relative_velocity_in_air.x > move_speed / 2) || (trying_to_go_left_in_air && relative_velocity_in_air.x < -move_speed / 2):
+				if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed / 2) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed / 2):
 					move_vector.x = 0
 				else:
-					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && relative_velocity_in_air.x < -MIN) && !(trying_to_go_left_in_air && relative_velocity_in_air.x > MIN):
-						if relative_velocity_in_air.z < -move_speed:
-							relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(relative_move_vector.x) * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
-						elif relative_velocity_in_air.z > move_speed:
-							relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(relative_move_vector.x) * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
+					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < -MIN) && !(trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > MIN):
+						if lin_vel_in_air_relative_to_cam.z < -move_speed:
+							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.x) * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
+						elif lin_vel_in_air_relative_to_cam.z > move_speed:
+							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.x) * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
 
-		relative_move_vector = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
+		move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 
 		if !on_slope:
-			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * relative_move_vector)
+			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world)
 		else:
-			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * relative_move_vector.project(slope_ray_cast.get_collision_normal()))
+			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.project(slope_ray_cast.get_collision_normal()))
 
 func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 	return Vector3(vector.x * cos(radians) + vector.z * sin(radians), vector.y, -vector.x * sin(radians) + vector.z * cos(radians))
 
 func player_state_machine(state: States) -> States:
 	if state == States.IDLE:
-		if is_moving():
+		if get_speed() > MIN:
 			return States.WALKING
 		else:
 			if crouch_input:
@@ -232,7 +237,7 @@ func player_state_machine(state: States) -> States:
 			else:
 				return States.IDLE
 	elif state == States.CROUCHING:
-		if is_moving():
+		if get_speed() > MIN:
 			return States.CROUCH_WALKING
 		else:
 			if crouch_input:
@@ -240,7 +245,7 @@ func player_state_machine(state: States) -> States:
 			else:
 				return States.IDLE
 	elif state == States.WALKING:
-		if is_moving():
+		if get_speed() > MIN:
 			if crouch_input:
 				return States.CROUCH_WALKING
 			elif run_input:
@@ -250,18 +255,18 @@ func player_state_machine(state: States) -> States:
 		else:
 			return States.IDLE
 	elif state == States.RUNNING:
-		if is_moving():
+		if get_speed() > MIN:
 			if run_input:
 				return States.RUNNING
 			else:
-				if bumping:
+				if bumping || !trying_to_go_forward:
 					return States.WALKING
 				else:
 					return States.RUNNING
 		else:
 			return States.IDLE
 	elif state == States.CROUCH_WALKING:
-		if is_moving():
+		if get_speed() > MIN:
 			if crouch_input:
 				return States.CROUCH_WALKING
 			else:
@@ -270,9 +275,6 @@ func player_state_machine(state: States) -> States:
 			return States.CROUCHING
 	else:
 		return state
-
-func is_moving() -> bool:
-	return get_speed() > MIN
 
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))

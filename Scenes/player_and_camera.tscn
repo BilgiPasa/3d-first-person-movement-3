@@ -31,6 +31,7 @@ camera_position = NodePath("Player/CameraPosition")
 
 [node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "bump_area")]
 collision_layer = 2
+mass = 75.0
 physics_material_override = ExtResource("1_a5f1f")
 script = ExtResource("3_t5fc0")
 player_capsule_mesh = SubResource("CapsuleMesh_vu1q0")
