@@ -10,10 +10,10 @@ uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_r07tb"]
 material = SubResource("StandardMaterial3D_wkhpl")
-size = Vector3(100, 0.1, 100)
+size = Vector3(200, 0.1, 200)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5s483"]
-size = Vector3(100, 0.1, 100)
+size = Vector3(200, 0.1, 200)
 
 [sub_resource type="BoxMesh" id="BoxMesh_5s483"]
 size = Vector3(2, 0.1, 10)

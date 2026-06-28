@@ -98,14 +98,14 @@ func _ready() -> void:
 	player_capsule_mesh.radius = PLAYER_RADIUS
 	player_capsule_shape.height = PLAYER_HEIGHT
 	player_capsule_shape.radius = PLAYER_RADIUS
-	camera_position.position.y = (PLAYER_HEIGHT / 2) - 0.25
+	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 	slope_ray_cast.target_position = Vector3(0, GROUNDED_AREA_SPHERE_RADIUS * 2, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
-	grounded_area.position.y = -PLAYER_HEIGHT / 2
+	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
-	bump_area.position.z = -(PLAYER_RADIUS + BUMP_AREA_BOX_SIZE.z / 2)
+	bump_area.position = Vector3(0, 0, -(PLAYER_RADIUS + BUMP_AREA_BOX_SIZE.z / 2))
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
 
 # * Get inputs
