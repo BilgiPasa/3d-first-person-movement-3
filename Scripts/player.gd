@@ -43,11 +43,11 @@ var coyote_time_counter: float
 # Player States
 enum States
 {
-	IDLE,
-	WALKING,
-	RUNNING,
-	CROUCHING,
-	CROUCH_WALKING
+	IDLE = 0,
+	CROUCHING = 1,
+	WALKING = 2,
+	RUNNING = 3,
+	CROUCH_WALKING = 4
 }
 
 # Player State Variable
@@ -106,7 +106,7 @@ func _ready() -> void:
 
 # * Get inputs
 func _process(_delta: float) -> void:
-	run_input = Input.is_action_pressed("run") && Input.is_action_pressed("move_forward")
+	run_input = Input.is_action_pressed("run")
 	crouch_input = Input.is_action_pressed("crouch")
 	jump_input = Input.is_action_pressed("jump")
 
@@ -224,7 +224,7 @@ func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 
 func player_state_machine(state: States) -> States:
 	if state == States.IDLE:
-		if is_moving_with_WASD():
+		if is_moving():
 			return States.WALKING
 		else:
 			if crouch_input:
@@ -232,7 +232,7 @@ func player_state_machine(state: States) -> States:
 			else:
 				return States.IDLE
 	elif state == States.CROUCHING:
-		if is_moving_with_WASD():
+		if is_moving():
 			return States.CROUCH_WALKING
 		else:
 			if crouch_input:
@@ -240,7 +240,7 @@ func player_state_machine(state: States) -> States:
 			else:
 				return States.IDLE
 	elif state == States.WALKING:
-		if is_moving_with_WASD():
+		if is_moving():
 			if crouch_input:
 				return States.CROUCH_WALKING
 			elif run_input:
@@ -250,7 +250,7 @@ func player_state_machine(state: States) -> States:
 		else:
 			return States.IDLE
 	elif state == States.RUNNING:
-		if is_moving_with_WASD():
+		if is_moving():
 			if run_input:
 				return States.RUNNING
 			else:
@@ -261,7 +261,7 @@ func player_state_machine(state: States) -> States:
 		else:
 			return States.IDLE
 	elif state == States.CROUCH_WALKING:
-		if is_moving_with_WASD():
+		if is_moving():
 			if crouch_input:
 				return States.CROUCH_WALKING
 			else:
@@ -269,10 +269,10 @@ func player_state_machine(state: States) -> States:
 		else:
 			return States.CROUCHING
 	else:
-		return States.IDLE
+		return state
 
-func is_moving_with_WASD() -> bool:
-	return move_vector.length() > MIN && get_speed() > MIN
+func is_moving() -> bool:
+	return get_speed() > MIN
 
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
