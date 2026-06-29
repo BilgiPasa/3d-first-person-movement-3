@@ -64,7 +64,7 @@ const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
 var grounded: bool
 
 # Bump Detection
-const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.1, 0.1)
+const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.2, 0.1)
 var bumping: bool
 
 # Player Rotation

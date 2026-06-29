@@ -20,7 +20,7 @@
 radius = 0.3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5s483"]
-size = Vector3(0.6, 1.1, 0.1)
+size = Vector3(0.6, 1.2, 0.1)
 
 [node name="PlayerAndCamera" type="Node3D" unique_id=1785156103 node_paths=PackedStringArray("player", "camera", "camera_holder", "camera_position")]
 script = ExtResource("1_vu1q0")

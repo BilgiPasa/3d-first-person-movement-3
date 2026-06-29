@@ -13,6 +13,7 @@ var current_cam_rot_mult: float
 
 # Camera FOV
 var normal_fov: int = Defaults.normal_fov
+var sprint_fov_change: int = 15
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float
@@ -60,7 +61,7 @@ func fov_change(process_delta: float) -> void:
 			else:
 				camera.fov = lerpf(camera.fov, normal_fov, zooming_speed * process_delta)
 		else:
-			sprint_fov = normal_fov + 10
+			sprint_fov = normal_fov + sprint_fov_change
 
 			if camera.fov > sprint_fov - 0.01:
 				camera.fov = sprint_fov
@@ -77,7 +78,7 @@ func fov_change(process_delta: float) -> void:
 			else:
 				camera.fov = lerpf(camera.fov, zoom_fov, zooming_speed * process_delta)
 		else:
-			zoom_sprint_fov = (normal_fov + 10) / 5.0
+			zoom_sprint_fov = (normal_fov + sprint_fov_change) / 5.0
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov
