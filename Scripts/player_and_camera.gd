@@ -13,7 +13,7 @@ var current_cam_rot_mult: float
 
 # Camera FOV
 var normal_fov: int = Defaults.normal_fov
-var sprint_fov_change: int = 15
+var sprint_fov_change: int = 10
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float

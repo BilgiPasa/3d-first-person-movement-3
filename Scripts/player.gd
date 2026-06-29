@@ -104,7 +104,7 @@ func _ready() -> void:
 	player_capsule_shape.radius = PLAYER_RADIUS
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-	slope_ray_cast.target_position = Vector3(0, GROUNDED_AREA_SPHERE_RADIUS * 2, 0)
+	slope_ray_cast.target_position = Vector3(0, -GROUNDED_AREA_SPHERE_RADIUS * 2, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
@@ -136,6 +136,7 @@ func _physics_process(delta: float) -> void:
 	handle_linear_damp()
 	movement(delta)
 	current_state = player_state_machine(current_state)
+	gravity_control()
 	move_speed_control()
 
 func coyote_time(physics_process_delta: float) -> void:
@@ -207,7 +208,7 @@ func movement(physics_process_delta: float) -> void:
 		if !on_slope:
 			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world)
 		else:
-			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.project(slope_ray_cast.get_collision_normal()))
+			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.slide(slope_ray_cast.get_collision_normal()))
 	else:
 		lin_vel_in_air_relative_to_cam = rotate_vector_around_y_axis(linear_velocity, -deg_to_rad(y_rot_deg))
 		trying_to_go_forward_in_air = trying_to_go_forward
@@ -253,7 +254,7 @@ func movement(physics_process_delta: float) -> void:
 		if !on_slope:
 			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world)
 		else:
-			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.project(slope_ray_cast.get_collision_normal()))
+			apply_force(move_speed * AIR_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.slide(slope_ray_cast.get_collision_normal()))
 
 func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 	return Vector3(vector.x * cos(radians) + vector.z * sin(radians), vector.y, -vector.x * sin(radians) + vector.z * cos(radians))
@@ -311,6 +312,16 @@ func player_state_machine(state: States) -> States:
 
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
+
+func gravity_control() -> void:
+	if touching && grounded:
+		if on_slope && linear_velocity.y > MIN:
+			gravity_scale = 1
+			apply_force(20 * mass * Vector3.UP) # Change this line if you change gravity. (30 - 20 = 10)
+		else:
+			gravity_scale = 0
+	else:
+		gravity_scale = 1
 
 func move_speed_control() -> void:
 	match current_state:
