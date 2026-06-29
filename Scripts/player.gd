@@ -29,7 +29,9 @@ var trying_to_go_left_in_air: bool
 
 # Crouch
 var crouch_speed: float = Defaults.normal_speed * 2.0 / 3.0
+var crouching: bool = false
 var crouch_input: bool
+var dont_uncrouch: bool
 
 # Jump
 const CAN_JUMP_TIMER_SECONDS: float = 0.3
@@ -86,6 +88,8 @@ const PLAYER_RADIUS: float = 0.5
 @export var grounded_area_sphere_shape: SphereShape3D
 @export var bump_area: Area3D
 @export var bump_area_box_shape: BoxShape3D
+@export var dont_uncrouch_area: Area3D
+@export var dont_uncrouch_area_sp_sh: SphereShape3D # dont uncrouch area sphere shape
 
 func _ready() -> void:
 	mass = 75
@@ -107,6 +111,8 @@ func _ready() -> void:
 	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
 	bump_area.position = Vector3(0, 0, -(PLAYER_RADIUS + BUMP_AREA_BOX_SIZE.z / 2))
 	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
+	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 4) - 0.025, 0)
+	dont_uncrouch_area_sp_sh.radius = PLAYER_RADIUS
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -126,6 +132,7 @@ func _physics_process(delta: float) -> void:
 	bumping = bump_area.has_overlapping_bodies()
 	coyote_time(delta)
 	jump()
+	crouch()
 	handle_linear_damp()
 	movement(delta)
 	current_state = player_state_machine(current_state)
@@ -158,6 +165,30 @@ func _on_jumping_timer_timeout() -> void:
 	jumping = false
 	jumping_timer.stop()
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
+
+func crouch() -> void:
+	if jumping:
+		return
+
+	if crouch_input && !crouching:
+		player_capsule_mesh.height = CROUCH_HEIGHT
+		player_capsule_shape.height = CROUCH_HEIGHT
+		camera_position.position = Vector3(0, (CROUCH_HEIGHT / 2) - 0.25, 0)
+		slope_ray_cast.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
+		grounded_area.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
+		bump_area_box_shape.size.y *= CROUCH_HEIGHT / PLAYER_HEIGHT
+		crouching = true
+	elif crouching:
+		dont_uncrouch = dont_uncrouch_area.has_overlapping_bodies()
+
+		if !crouch_input && !dont_uncrouch:
+			player_capsule_mesh.height = PLAYER_HEIGHT
+			player_capsule_shape.height = PLAYER_HEIGHT
+			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
+			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
+			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
+			bump_area_box_shape.size.y *= PLAYER_HEIGHT / CROUCH_HEIGHT
+			crouching = false
 
 func handle_linear_damp() -> void:
 	if grounded && !jumping:
@@ -256,7 +287,9 @@ func player_state_machine(state: States) -> States:
 			return States.IDLE
 	elif state == States.RUNNING:
 		if get_speed() > MIN:
-			if run_input:
+			if crouching:
+				return States.CROUCH_WALKING
+			elif run_input:
 				return States.RUNNING
 			else:
 				if bumping || !trying_to_go_forward:
