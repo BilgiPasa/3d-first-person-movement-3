@@ -313,7 +313,6 @@ func gravity_control() -> void:
 	if touching && grounded:
 		if on_slope && linear_velocity.y > MIN:
 			gravity_scale = 1
-			apply_force(20 * mass * Vector3.UP) # Change this line if you change gravity. (30 - 20 = 10)
 		else:
 			gravity_scale = 0
 	else:
