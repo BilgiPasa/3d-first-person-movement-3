@@ -75,7 +75,7 @@ const PLAYER_HEIGHT: float = 2.0 # Don't make it smaller than 0.9
 const CROUCH_HEIGHT: float = 1.5 # Don't make it smaller than 0.9
 
 # @export Variables
-@export var player_capsule_mesh_inst: MeshInstance3D # Height must be 2 in the editor
+@export var player_capsule_mesh_inst: MeshInstance3D
 @export var player_capsule_coll_sh: CollisionShape3D
 @export var camera_position: Node3D
 @export var slope_ray_cast: RayCast3D
@@ -93,7 +93,7 @@ func _ready() -> void:
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 8
-	player_capsule_mesh_inst.scale.y = PLAYER_HEIGHT / 2
+	player_capsule_mesh_inst.mesh.height = PLAYER_HEIGHT
 	player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
@@ -161,7 +161,7 @@ func crouch() -> void:
 		return
 
 	if crouch_input && !crouching:
-		player_capsule_mesh_inst.scale.y = CROUCH_HEIGHT / 2
+		player_capsule_mesh_inst.mesh.height = CROUCH_HEIGHT
 		player_capsule_coll_sh.shape.height = CROUCH_HEIGHT
 		camera_position.position = Vector3(0, (CROUCH_HEIGHT / 2) - 0.25, 0)
 		slope_ray_cast.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
@@ -179,7 +179,7 @@ func crouch() -> void:
 			if grounded:
 				position.y += (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
 
-			player_capsule_mesh_inst.scale.y = PLAYER_HEIGHT / 2
+			player_capsule_mesh_inst.mesh.height = PLAYER_HEIGHT
 			player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)

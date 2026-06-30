@@ -25,7 +25,6 @@ camera_position = NodePath("Player/CameraPosition")
 
 [node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("player_capsule_mesh_inst", "player_capsule_coll_sh", "camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "bump_area", "bump_area_box_coll_sh", "dont_uncrouch_area")]
 collision_layer = 2
-mass = 75.0
 physics_material_override = ExtResource("1_a5f1f")
 script = ExtResource("3_t5fc0")
 player_capsule_mesh_inst = NodePath("MeshInstance3D")
@@ -82,7 +81,6 @@ shape = SubResource("SphereShape3D_r07tb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=1566701192]
-fov = 90.0
 
 [connection signal="timeout" from="Player/CanJumpTimer" to="Player" method="_on_can_jump_timer_timeout"]
 [connection signal="timeout" from="Player/JumpingTimer" to="Player" method="_on_jumping_timer_timeout"]
