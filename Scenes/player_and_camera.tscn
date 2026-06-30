@@ -4,16 +4,6 @@
 [ext_resource type="Script" uid="uid://bxdo3v2a7lhhm" path="res://Scripts/player_and_camera.gd" id="1_vu1q0"]
 [ext_resource type="Script" uid="uid://d0b3n25jqa5ep" path="res://Scripts/player.gd" id="3_t5fc0"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_vu1q0"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t5fc0"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_y4qkf"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2b1b8"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_vu1q0"]
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_wkhpl"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r07tb"]
@@ -33,23 +23,21 @@ camera = NodePath("CameraHolder/Camera3D")
 camera_holder = NodePath("CameraHolder")
 camera_position = NodePath("Player/CameraPosition")
 
-[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "bump_area", "dont_uncrouch_area")]
+[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("player_capsule_mesh_inst", "player_capsule_coll_sh", "camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "bump_area", "bump_area_box_coll_sh", "dont_uncrouch_area")]
 collision_layer = 2
 mass = 75.0
 physics_material_override = ExtResource("1_a5f1f")
 script = ExtResource("3_t5fc0")
-player_capsule_mesh = SubResource("CapsuleMesh_vu1q0")
-player_capsule_shape = SubResource("CapsuleShape3D_t5fc0")
+player_capsule_mesh_inst = NodePath("MeshInstance3D")
+player_capsule_coll_sh = NodePath("CollisionShape3D")
 camera_position = NodePath("CameraPosition")
 slope_ray_cast = NodePath("SlopeRayCast")
 can_jump_timer = NodePath("CanJumpTimer")
 jumping_timer = NodePath("JumpingTimer")
 grounded_area = NodePath("GroundedArea")
-grounded_area_sphere_shape = SubResource("SphereShape3D_y4qkf")
 bump_area = NodePath("BumpArea")
-bump_area_box_shape = SubResource("BoxShape3D_2b1b8")
+bump_area_box_coll_sh = NodePath("BumpArea/CollisionShape3D")
 dont_uncrouch_area = NodePath("DontUncrouchArea")
-dont_uncrouch_area_sp_sh = SubResource("SphereShape3D_vu1q0")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player" unique_id=1960179756]
 layers = 2

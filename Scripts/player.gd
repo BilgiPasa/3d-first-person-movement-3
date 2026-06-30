@@ -62,34 +62,29 @@ var current_state: States
 var touching: bool
 
 # Ground Detection
-const GROUNDED_AREA_SPHERE_RADIUS: float = 0.3
 var grounded: bool
 
 # Bump Detection
-const BUMP_AREA_BOX_SIZE: Vector3 = Vector3(0.6, 1.2, 0.1)
 var bumping: bool
 
 # Player Rotation
 var y_rot_deg: float # This variable is assigned by the player_and_camera script
 
 # Player Sizes
-const PLAYER_HEIGHT: float = 2.0
-const CROUCH_HEIGHT: float = 1.5
-const PLAYER_RADIUS: float = 0.5
+const PLAYER_HEIGHT: float = 2.0 # Don't make it smaller than 0.9
+const CROUCH_HEIGHT: float = 1.5 # Don't make it smaller than 0.9
 
 # @export Variables
-@export var player_capsule_mesh: CapsuleMesh
-@export var player_capsule_shape: CapsuleShape3D
+@export var player_capsule_mesh_inst: MeshInstance3D # Height must be 2 in the editor
+@export var player_capsule_coll_sh: CollisionShape3D
 @export var camera_position: Node3D
 @export var slope_ray_cast: RayCast3D
 @export var can_jump_timer: Timer
 @export var jumping_timer: Timer
 @export var grounded_area: Area3D
-@export var grounded_area_sphere_shape: SphereShape3D
 @export var bump_area: Area3D
-@export var bump_area_box_shape: BoxShape3D
+@export var bump_area_box_coll_sh: CollisionShape3D
 @export var dont_uncrouch_area: Area3D
-@export var dont_uncrouch_area_sp_sh: SphereShape3D # dont uncrouch area sphere shape
 
 func _ready() -> void:
 	mass = 75
@@ -98,21 +93,15 @@ func _ready() -> void:
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 8
-	player_capsule_mesh.height = PLAYER_HEIGHT
-	player_capsule_mesh.radius = PLAYER_RADIUS
-	player_capsule_shape.height = PLAYER_HEIGHT
-	player_capsule_shape.radius = PLAYER_RADIUS
+	player_capsule_mesh_inst.scale.y = PLAYER_HEIGHT / 2
+	player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-	slope_ray_cast.target_position = Vector3(0, -GROUNDED_AREA_SPHERE_RADIUS * 2, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-	grounded_area_sphere_shape.radius = GROUNDED_AREA_SPHERE_RADIUS
-	bump_area.position = Vector3(0, 0, -(PLAYER_RADIUS + BUMP_AREA_BOX_SIZE.z / 2))
-	bump_area_box_shape.size = BUMP_AREA_BOX_SIZE
+	bump_area_box_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
 	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 4) - 0.025, 0)
-	dont_uncrouch_area_sp_sh.radius = PLAYER_RADIUS
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -172,23 +161,30 @@ func crouch() -> void:
 		return
 
 	if crouch_input && !crouching:
-		player_capsule_mesh.height = CROUCH_HEIGHT
-		player_capsule_shape.height = CROUCH_HEIGHT
+		player_capsule_mesh_inst.scale.y = CROUCH_HEIGHT / 2
+		player_capsule_coll_sh.shape.height = CROUCH_HEIGHT
 		camera_position.position = Vector3(0, (CROUCH_HEIGHT / 2) - 0.25, 0)
 		slope_ray_cast.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
 		grounded_area.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
-		bump_area_box_shape.size.y *= CROUCH_HEIGHT / PLAYER_HEIGHT
+		bump_area_box_coll_sh.shape.size.y = CROUCH_HEIGHT - 0.8
+
+		if grounded:
+			position.y -= (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
+
 		crouching = true
 	elif crouching:
 		dont_uncrouch = dont_uncrouch_area.has_overlapping_bodies()
 
 		if !crouch_input && !dont_uncrouch:
-			player_capsule_mesh.height = PLAYER_HEIGHT
-			player_capsule_shape.height = PLAYER_HEIGHT
+			if grounded:
+				position.y += (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
+
+			player_capsule_mesh_inst.scale.y = PLAYER_HEIGHT / 2
+			player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-			bump_area_box_shape.size.y *= PLAYER_HEIGHT / CROUCH_HEIGHT
+			bump_area_box_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
 			crouching = false
 
 func handle_linear_damp() -> void:
