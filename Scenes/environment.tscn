@@ -17,10 +17,21 @@ size = Vector3(200, 0.1, 200)
 size = Vector3(200, 0.1, 200)
 
 [sub_resource type="BoxMesh" id="BoxMesh_iacmt"]
-size = Vector3(2, 0.1, 10)
+size = Vector3(2, 0.1, 15)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6ev3c"]
-size = Vector3(2, 0.1, 10)
+size = Vector3(2, 0.1, 15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r42gm"]
+albedo_texture = ExtResource("3_o3ee3")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_wkhpl"]
+material = SubResource("StandardMaterial3D_r42gm")
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7lsjx"]
+size = Vector3(2, 0.1, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_x6ack"]
 size = Vector3(3, 0.1, 15)
@@ -39,17 +50,6 @@ size = Vector3(3, 0.1, 3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_wkhpl"]
 size = Vector3(3, 0.1, 3)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r42gm"]
-albedo_texture = ExtResource("3_o3ee3")
-uv1_triplanar = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_wkhpl"]
-material = SubResource("StandardMaterial3D_r42gm")
-size = Vector3(2, 0.1, 2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_7lsjx"]
-size = Vector3(2, 0.1, 2)
-
 [node name="Environment" type="Node3D" unique_id=2118310843]
 
 [node name="MainGround" type="StaticBody3D" parent="." unique_id=737079153]
@@ -63,16 +63,27 @@ mesh = SubResource("BoxMesh_r07tb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainGround" unique_id=1631115435]
 shape = SubResource("BoxShape3D_5s483")
 
-[node name="NormalRamp1" type="StaticBody3D" parent="." unique_id=1396985660]
-transform = Transform3D(1, 8.742278e-08, 1.5142069e-07, 0, 0.8660254, -0.5, -1.7484555e-07, 0.5, 0.8660254, 5, 2.45, -15)
+[node name="Ramp1" type="StaticBody3D" parent="." unique_id=1396985660]
+transform = Transform3D(1, 8.742278e-08, 1.5142069e-07, 0, 0.8660254, -0.5, -1.7484555e-07, 0.5, 0.8660254, 5, 3.675, -17.5)
 collision_mask = 0
 physics_material_override = ExtResource("1_r42gm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NormalRamp1" unique_id=754491469]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp1" unique_id=754491469]
 mesh = SubResource("BoxMesh_iacmt")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NormalRamp1" unique_id=963272657]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp1" unique_id=963272657]
 shape = SubResource("BoxShape3D_6ev3c")
+
+[node name="SmallPlatormOfRamp1" type="StaticBody3D" parent="." unique_id=796699435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 7.415, -24.97)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SmallPlatormOfRamp1" unique_id=807366739]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SmallPlatormOfRamp1" unique_id=178602077]
+shape = SubResource("BoxShape3D_7lsjx")
 
 [node name="30DegRamp" type="StaticBody3D" parent="." unique_id=1504329682]
 transform = Transform3D(-4.371139e-08, 0.5, 0.8660254, 0, 0.8660254, -0.5, -1, -2.1855694e-08, -3.7855173e-08, -30, 3.675, 5)
@@ -139,17 +150,6 @@ mesh = SubResource("BoxMesh_7lsjx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MediumPlatformOf60DegRamp" unique_id=18592858]
 shape = SubResource("BoxShape3D_wkhpl")
-
-[node name="SmallPlatormOfNormalRamp1" type="StaticBody3D" parent="." unique_id=796699435]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4.943, -20.305)
-collision_mask = 0
-physics_material_override = ExtResource("1_r42gm")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SmallPlatormOfNormalRamp1" unique_id=807366739]
-mesh = SubResource("BoxMesh_wkhpl")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SmallPlatormOfNormalRamp1" unique_id=178602077]
-shape = SubResource("BoxShape3D_7lsjx")
 
 [node name="AscendingSmallPlatforms" type="Node3D" parent="." unique_id=566787657]
 
@@ -437,4 +437,59 @@ physics_material_override = ExtResource("1_r42gm")
 mesh = SubResource("BoxMesh_wkhpl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/25" unique_id=1524764246]
+shape = SubResource("BoxShape3D_7lsjx")
+
+[node name="26" type="StaticBody3D" parent="AscendingSmallPlatforms" unique_id=1291459329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59, 2.65, -12.01)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AscendingSmallPlatforms/26" unique_id=770874066]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/26" unique_id=1792457946]
+shape = SubResource("BoxShape3D_7lsjx")
+
+[node name="27" type="StaticBody3D" parent="AscendingSmallPlatforms" unique_id=258885089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61, 2.75, -12.01)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AscendingSmallPlatforms/27" unique_id=533957085]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/27" unique_id=1070044950]
+shape = SubResource("BoxShape3D_7lsjx")
+
+[node name="28" type="StaticBody3D" parent="AscendingSmallPlatforms" unique_id=387281804]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63, 2.85, -12.01)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AscendingSmallPlatforms/28" unique_id=166210202]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/28" unique_id=1869222553]
+shape = SubResource("BoxShape3D_7lsjx")
+
+[node name="29" type="StaticBody3D" parent="AscendingSmallPlatforms" unique_id=1835194662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65, 2.95, -12.01)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AscendingSmallPlatforms/29" unique_id=1953748746]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/29" unique_id=1911765800]
+shape = SubResource("BoxShape3D_7lsjx")
+
+[node name="30" type="StaticBody3D" parent="AscendingSmallPlatforms" unique_id=316932994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 3.05, -12.01)
+collision_mask = 0
+physics_material_override = ExtResource("1_r42gm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AscendingSmallPlatforms/30" unique_id=2055985495]
+mesh = SubResource("BoxMesh_wkhpl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AscendingSmallPlatforms/30" unique_id=1624537247]
 shape = SubResource("BoxShape3D_7lsjx")
