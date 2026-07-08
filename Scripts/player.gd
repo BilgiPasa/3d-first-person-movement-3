@@ -128,6 +128,7 @@ func _physics_process(delta: float) -> void:
 	current_state = player_state_machine(current_state)
 	gravity_control()
 	move_speed_control()
+	low_velocity_reseter()
 
 func coyote_time(physics_process_delta: float) -> void:
 	if grounded:
@@ -329,6 +330,7 @@ func move_speed_control() -> void:
 		_:
 			move_speed = normal_speed
 
+func low_velocity_reseter() -> void:
 	if abs(linear_velocity.z) <= MIN:
 		linear_velocity.z = 0
 
