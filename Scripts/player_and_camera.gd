@@ -2,7 +2,7 @@ class_name PlayerAndCamera
 extends Node3D
 
 # Camera Rotation
-var mouse_sensitivity: int = Defaults.mouse_sensitivity
+var mouse_sensitivity: int = Defaults.MOUSE_SENSITIVITY
 var x_rot_deg: float = 0 # x rotation degrees
 var y_rot_deg: float = 0 # y rotation degrees
 
@@ -12,14 +12,14 @@ const ZOOMED_CAM_ROT_MULT: float = 0.5
 var current_cam_rot_mult: float
 
 # Camera FOV
-var normal_fov: int = Defaults.normal_fov
-var sprint_fov_change: int = 10
+var normal_fov: int = Defaults.NORMAL_FOV
+var sprint_fov_change: int = Defaults.SPRINT_FOV_CHANGE
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float
 
 # Camera Zoom
-var zooming_speed: int = 12
+const ZOOMING_SPEED: int = 12
 var zoom_input: bool
 
 # @export Variables
@@ -55,35 +55,35 @@ func fov_change(process_delta: float) -> void:
 	if !zoom_input:
 		current_cam_rot_mult = NORMAL_CAM_ROT_MULT
 
-		if !(Globals.dynamic_fov && player.current_state == player.States.RUNNING):
+		if !(sprint_fov_change > 0 && player.current_state == player.States.RUNNING):
 			if camera.fov > normal_fov - 0.01 && camera.fov < normal_fov + 0.01:
 				camera.fov = normal_fov
 			else:
-				camera.fov = lerpf(camera.fov, normal_fov, zooming_speed * process_delta)
+				camera.fov = lerpf(camera.fov, normal_fov, ZOOMING_SPEED * process_delta)
 		else:
 			sprint_fov = normal_fov + sprint_fov_change
 
 			if camera.fov > sprint_fov - 0.01:
 				camera.fov = sprint_fov
 			else:
-				camera.fov = lerpf(camera.fov, sprint_fov, zooming_speed * process_delta)
+				camera.fov = lerpf(camera.fov, sprint_fov, ZOOMING_SPEED * process_delta)
 	else:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
-		if !(Globals.dynamic_fov && player.current_state == player.States.RUNNING):
+		if !(sprint_fov_change > 0 && player.current_state == player.States.RUNNING):
 			zoom_fov = normal_fov / 5.0
 
 			if camera.fov < zoom_fov + 0.01:
 				camera.fov = zoom_fov
 			else:
-				camera.fov = lerpf(camera.fov, zoom_fov, zooming_speed * process_delta)
+				camera.fov = lerpf(camera.fov, zoom_fov, ZOOMING_SPEED * process_delta)
 		else:
 			zoom_sprint_fov = (normal_fov + sprint_fov_change) / 5.0
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov
 			else:
-				camera.fov = lerpf(camera.fov, zoom_sprint_fov, zooming_speed * process_delta)
+				camera.fov = lerpf(camera.fov, zoom_sprint_fov, ZOOMING_SPEED * process_delta)
 
 func get_player_speed() -> float:
 	return player.get_speed()

@@ -1,8 +1,8 @@
 extends Node
 
-var normal_speed: int = 9
-var jump_force: int = 13
-var mouse_sensitivity: int = 100
-var normal_fov: int = 90
-var dynamic_fov: bool = true
-var showing_speed_label: bool = true
+var NORMAL_SPEED: int = 9
+var JUMP_FORCE: int = 13
+var MOUSE_SENSITIVITY: int = 100
+var NORMAL_FOV: int = 90
+var SPRINT_FOV_CHANGE: int = 10
+var SHOWING_SPEED_LABEL: bool = true

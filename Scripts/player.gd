@@ -10,8 +10,9 @@ const GROUND_MOVE_MULT: float = 750.01
 const GROUND_LINEAR_DAMP: float = 12.4
 const AIR_LINEAR_DAMP: float = 0.001
 const MIN: float = 0.1
-var normal_speed: int = Defaults.normal_speed
-var run_speed: float = Defaults.normal_speed * 4.0 / 3.0
+var normal_speed: int = Defaults.NORMAL_SPEED
+var run_speed: float = Defaults.NORMAL_SPEED * 4.0 / 3.0
+var gravity_amount: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float
 var run_input: bool
 var trying_to_go_forward: bool
@@ -28,7 +29,7 @@ var trying_to_go_right_in_air: bool
 var trying_to_go_left_in_air: bool
 
 # Crouch
-var crouch_speed: float = Defaults.normal_speed * 2.0 / 3.0
+var crouch_speed: float = Defaults.NORMAL_SPEED * 2.0 / 3.0
 var crouching: bool = false
 var crouch_input: bool
 var dont_uncrouch: bool
@@ -36,7 +37,7 @@ var dont_uncrouch: bool
 # Jump
 const CAN_JUMP_TIMER_SECONDS: float = 0.3
 const JUMPING_TIMER_SECONDS: float = 0.1
-var jump_force: int = Defaults.jump_force
+var jump_force: int = Defaults.JUMP_FORCE
 var can_jump: bool = true
 var jumping: bool = false
 var jump_input: bool
@@ -313,6 +314,7 @@ func gravity_control() -> void:
 	if touching && grounded:
 		if on_slope && linear_velocity.y > MIN:
 			gravity_scale = 1
+			apply_force((gravity_amount - 10) * mass * Vector3.UP)
 		else:
 			gravity_scale = 0
 	else:
