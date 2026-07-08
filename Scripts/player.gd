@@ -111,7 +111,7 @@ func _process(_delta: float) -> void:
 	run_input = Input.is_action_pressed("run") && Input.is_action_pressed("move_forward")
 
 	# Forward is -Z, Backwards is Z, Right is X, Left is -X
-	move_vector = Vector3(Input.get_axis("move_left", "move_right"), 0, -Input.get_axis("move_back", "move_forward")).normalized()
+	move_vector = Vector3(Input.get_axis("move_left", "move_right"), 0, Input.get_axis("move_forward", "move_back")).normalized()
 	trying_to_go_forward = move_vector.z < -MIN
 
 # * Handle other things
