@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://wbiuygagbqyl"]
+
+[ext_resource type="Script" uid="uid://qy83w4jf8i62" path="res://Scripts/settings_menu.gd" id="1_icv2g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_124y6"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="SettingsMenu" type="Control" unique_id=631766552 node_paths=PackedStringArray("go_back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_icv2g")
+go_back_button = NodePath("Panel/GoBackButton")
+
+[node name="Panel" type="Panel" parent="." unique_id=333397100]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_124y6")
+
+[node name="SettingsLabel" type="Label" parent="Panel" unique_id=1983972146]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -213.0
+offset_top = 60.0
+offset_right = 213.0
+offset_bottom = 211.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 110
+text = "Settings"
+
+[node name="GoBackButton" type="Button" parent="Panel" unique_id=986727638]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -223.0
+offset_top = -87.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+text = "Go Back"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="Panel/GoBackButton" to="." method="_on_go_back_button_pressed"]

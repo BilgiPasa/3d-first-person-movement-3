@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://s5psyjsom882"]
+
+[ext_resource type="Texture2D" uid="uid://dyy8iuj4iighw" path="res://Materials/LightBlueWithCorners.png" id="1_8nhbc"]
+[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_bkqhc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhpl"]
+albedo_texture = ExtResource("1_8nhbc")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_offset = Vector3(0.5, 0, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_5s483"]
+material = SubResource("StandardMaterial3D_wkhpl")
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r07tb"]
+size = Vector3(2, 0.1, 2)
+
+[node name="SmallPlatform" type="StaticBody3D" unique_id=109542825]
+physics_material_override = ExtResource("1_bkqhc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=671489852]
+mesh = SubResource("BoxMesh_5s483")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=160742109]
+shape = SubResource("BoxShape3D_r07tb")
