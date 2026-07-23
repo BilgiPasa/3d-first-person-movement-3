@@ -1,8 +1,8 @@
 extends Node
 
-var NORMAL_SPEED: int = 9
-var JUMP_FORCE: int = 13
-var MOUSE_SENSITIVITY: int = 100
-var NORMAL_FOV: int = 90
-var SPRINT_FOV_CHANGE: int = 10
-var SHOWING_SPEED_LABEL: bool = true
+const NORMAL_SPEED: int = 9
+const JUMP_FORCE: int = 13
+const MOUSE_SENSITIVITY: int = 100
+const NORMAL_FOV: int = 90
+const SPRINT_FOV_CHANGE: int = 10
+const SHOWING_SPEED_LABEL: bool = true
