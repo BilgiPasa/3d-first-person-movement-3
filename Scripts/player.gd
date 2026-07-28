@@ -1,7 +1,7 @@
 class_name Player
 extends RigidBody3D
 
-# Note: I changed the default gravity to 30 m/s^2 in Project Settings
+# Note: I changed the default gravity to 40 m/s^2 in the Project Settings
 # Note2: I have set the layers and the masks in the editor.
 
 # Movement
@@ -76,16 +76,16 @@ const PLAYER_HEIGHT: float = 2.0 # Don't make it smaller than 0.9
 const CROUCH_HEIGHT: float = 1.5 # Don't make it smaller than 0.9
 
 # @export Variables
-@export var player_capsule_mesh_inst: MeshInstance3D
-@export var player_capsule_coll_sh: CollisionShape3D
 @export var camera_position: Node3D
 @export var slope_ray_cast: RayCast3D
 @export var can_jump_timer: Timer
 @export var jumping_timer: Timer
 @export var grounded_area: Area3D
-@export var bump_area: Area3D
-@export var bump_area_box_coll_sh: CollisionShape3D
 @export var dont_uncrouch_area: Area3D
+@export var player_coll_shape: CollisionShape3D # It has a capsule shape
+@export var player_mesh_inst: MeshInstance3D # It has a capsule mesh
+@export var bump_area: Area3D
+@export var bump_area_coll_sh: CollisionShape3D # It has a box shape
 
 func _ready() -> void:
 	mass = 75
@@ -94,15 +94,15 @@ func _ready() -> void:
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 8
-	player_capsule_mesh_inst.mesh.height = PLAYER_HEIGHT
-	player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-	bump_area_box_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
 	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 4) - 0.025, 0)
+	player_coll_shape.shape.height = PLAYER_HEIGHT
+	player_mesh_inst.mesh.height = PLAYER_HEIGHT
+	bump_area_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -116,7 +116,7 @@ func _process(_delta: float) -> void:
 
 # * Handle other things
 func _physics_process(delta: float) -> void:
-	rotation_degrees.y = y_rot_deg
+	player_coll_shape.rotation_degrees.y = y_rot_deg
 	touching = get_contact_count() > 0
 	grounded = grounded_area.has_overlapping_bodies()
 	bumping = bump_area.has_overlapping_bodies()
@@ -125,7 +125,7 @@ func _physics_process(delta: float) -> void:
 	crouch()
 	handle_linear_damp()
 	movement(delta)
-	current_state = player_state_machine(current_state)
+	current_state = state_machine(current_state)
 	gravity_control()
 	move_speed_control()
 	low_velocity_reseter()
@@ -163,12 +163,12 @@ func crouch() -> void:
 		return
 
 	if crouch_input && !crouching:
-		player_capsule_mesh_inst.mesh.height = CROUCH_HEIGHT
-		player_capsule_coll_sh.shape.height = CROUCH_HEIGHT
 		camera_position.position = Vector3(0, (CROUCH_HEIGHT / 2) - 0.25, 0)
 		slope_ray_cast.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
 		grounded_area.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
-		bump_area_box_coll_sh.shape.size.y = CROUCH_HEIGHT - 0.8
+		player_coll_shape.shape.height = CROUCH_HEIGHT
+		player_mesh_inst.mesh.height = CROUCH_HEIGHT
+		bump_area_coll_sh.shape.size.y = CROUCH_HEIGHT - 0.8
 
 		if grounded:
 			position.y -= (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
@@ -181,12 +181,12 @@ func crouch() -> void:
 			if grounded:
 				position.y += (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
 
-			player_capsule_mesh_inst.mesh.height = PLAYER_HEIGHT
-			player_capsule_coll_sh.shape.height = PLAYER_HEIGHT
 			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-			bump_area_box_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
+			player_coll_shape.shape.height = PLAYER_HEIGHT
+			player_mesh_inst.mesh.height = PLAYER_HEIGHT
+			bump_area_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
 			crouching = false
 
 func handle_linear_damp() -> void:
@@ -209,25 +209,33 @@ func movement(physics_process_delta: float) -> void:
 			apply_force(move_speed * GROUND_MOVE_MULT * physics_process_delta * mass * move_vector_relative_to_world.slide(slope_ray_cast.get_collision_normal()))
 	else:
 		lin_vel_in_air_relative_to_cam = rotate_vector_around_y_axis(linear_velocity, -deg_to_rad(y_rot_deg))
+
+		# For optimization
 		trying_to_go_forward_in_air = trying_to_go_forward
 		trying_to_go_back_in_air = move_vector.z > MIN
 		trying_to_go_right_in_air = move_vector.x > MIN
 		trying_to_go_left_in_air = move_vector.x < -MIN
 
+		# If (player is faster than its movement speed in -Z and player is trying to go forward) or (player is faster than its movement speed in Z and player is trying to go backwards)
 		if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed):
-			move_vector.z = 0
+			move_vector.z = 0 # Stop Z axis acceleration
 
+		# If (player is faster than its movement speed in X and player is trying to go right) or (player is faster than its movement speed in -X and player is trying to go left)
 		if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed):
-			move_vector.x = 0
+			move_vector.x = 0 # Stop X axis acceleration
 
+		# If player is faster than its movement speed
 		if get_speed() > move_speed:
+			# In 4 quadrants of X and Z axis, if player is slower than its movement speed and faster than 0.4 times of its movement speed and player is trying to go to the quadrant that has its velocity vector in it
 			if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4):
-				move_vector.z = 0
-				move_vector.x = 0
+				move_vector.z = 0 # Stop Z axis acceleration
+				move_vector.x = 0 # Stop X axis acceleration
 			else:
+				# If (player is faster than half of its movement speed in -Z and player is trying to go forward) or (player is faster than half of its movement speed in Z and player is trying to go backwards)
 				if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
-					move_vector.z = 0
+					move_vector.z = 0 # Stop Z axis acceleration
 				else:
+					# If (player is trying to go forward or backwards) and not (player is trying to go forward and player has backwards velocity) and not (player is trying to go backwards and player has forward velocity)
 					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > MIN) && !(trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < -MIN):
 						if lin_vel_in_air_relative_to_cam.x > move_speed:
 							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
@@ -236,9 +244,11 @@ func movement(physics_process_delta: float) -> void:
 							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
 
+				# If (player is faster than half of its movement speed in X and player is trying to go right) or (player is faster than half of its movement speed in -X and player is trying to go left)
 				if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed / 2) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed / 2):
-					move_vector.x = 0
+					move_vector.x = 0 # Stop X axis acceleration
 				else:
+					# If (player is trying to go right or left) and not (player is trying to go right and player has left velocity) and not (player is trying to go left and player has right velocity)
 					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < -MIN) && !(trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > MIN):
 						if lin_vel_in_air_relative_to_cam.z < -move_speed:
 							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
@@ -257,7 +267,7 @@ func movement(physics_process_delta: float) -> void:
 func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 	return Vector3(vector.x * cos(radians) + vector.z * sin(radians), vector.y, -vector.x * sin(radians) + vector.z * cos(radians))
 
-func player_state_machine(state: States) -> States:
+func state_machine(state: States) -> States:
 	if state == States.IDLE:
 		if get_speed() > MIN:
 			return States.WALKING

@@ -23,9 +23,9 @@ const ZOOMING_SPEED: int = 12
 var zoom_input: bool
 
 # @export Variables
-@export var player: Player
-@export var camera: Camera3D
 @export var camera_holder: Node3D
+@export var camera: Camera3D
+@export var player: Player
 @export var camera_position: Node3D
 
 func _ready() -> void:
