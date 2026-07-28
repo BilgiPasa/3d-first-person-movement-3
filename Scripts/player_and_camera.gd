@@ -71,14 +71,14 @@ func fov_change(process_delta: float) -> void:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
 		if !(sprint_fov_change > 0 && player.current_state == player.States.RUNNING):
-			zoom_fov = normal_fov / 5.0
+			zoom_fov = normal_fov / 5.0 # To make floating point division, 5.0 is written here instead of 5
 
 			if camera.fov < zoom_fov + 0.01:
 				camera.fov = zoom_fov
 			else:
 				camera.fov = lerpf(camera.fov, zoom_fov, ZOOMING_SPEED * process_delta)
 		else:
-			zoom_sprint_fov = (normal_fov + sprint_fov_change) / 5.0
+			zoom_sprint_fov = (normal_fov + sprint_fov_change) / 5.0 # To make floating point division, 5.0 is written here instead of 5
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov

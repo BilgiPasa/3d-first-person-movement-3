@@ -1,9 +1,6 @@
 class_name Player
 extends RigidBody3D
 
-# Note: I changed the default gravity to 40 m/s^2 in the Project Settings
-# Note2: I have set the layers and the masks in the editor.
-
 # Movement
 const AIR_MOVE_MULT: int = 100
 const GROUND_MOVE_MULT: float = 750.01
