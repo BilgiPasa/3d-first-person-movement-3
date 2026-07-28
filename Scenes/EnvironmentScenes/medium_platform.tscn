@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dfd80qt21v6d7"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_yb1hd"]
-[ext_resource type="Texture2D" uid="uid://bafeoycxnsc4d" path="res://Materials/DarkGreenWithCorners.png" id="2_tdale"]
+[ext_resource type="Texture2D" uid="uid://bafeoycxnsc4d" path="res://Materials/Sprites/DarkGreenWithCorners.png" id="2_tdale"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qvxe0"]
 albedo_texture = ExtResource("2_tdale")

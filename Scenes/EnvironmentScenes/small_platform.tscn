@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://s5psyjsom882"]
 
-[ext_resource type="Texture2D" uid="uid://dyy8iuj4iighw" path="res://Materials/LightBlueWithCorners.png" id="1_8nhbc"]
+[ext_resource type="Texture2D" uid="uid://dyy8iuj4iighw" path="res://Materials/Sprites/LightBlueWithCorners.png" id="1_8nhbc"]
 [ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_bkqhc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhpl"]

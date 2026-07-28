@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7iddkfce7a2v"
-path.s3tc="res://.godot/imported/DarkTurquoiseWithCorners.png-ebc1d8cedeb05c54b7eee6abbf1175b1.s3tc.ctex"
+path.s3tc="res://.godot/imported/DarkTurquoiseWithCorners.png-2d51654689ec09c5ad56130f34ee397b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Materials/DarkTurquoiseWithCorners.png"
-dest_files=["res://.godot/imported/DarkTurquoiseWithCorners.png-ebc1d8cedeb05c54b7eee6abbf1175b1.s3tc.ctex"]
+source_file="res://Materials/Sprites/DarkTurquoiseWithCorners.png"
+dest_files=["res://.godot/imported/DarkTurquoiseWithCorners.png-2d51654689ec09c5ad56130f34ee397b.s3tc.ctex"]
 
 [params]
 

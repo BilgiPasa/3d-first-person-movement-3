@@ -99,7 +99,7 @@ func _ready() -> void:
 	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 4) - 0.025, 0)
 	player_coll_shape.shape.height = PLAYER_HEIGHT
 	player_mesh_inst.mesh.height = PLAYER_HEIGHT
-	bump_area_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
+	bump_area_coll_sh.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -165,7 +165,7 @@ func crouch() -> void:
 		grounded_area.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
 		player_coll_shape.shape.height = CROUCH_HEIGHT
 		player_mesh_inst.mesh.height = CROUCH_HEIGHT
-		bump_area_coll_sh.shape.size.y = CROUCH_HEIGHT - 0.8
+		bump_area_coll_sh.shape.size.y = (CROUCH_HEIGHT / 2) + 0.1
 
 		if grounded:
 			position.y -= (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
@@ -183,7 +183,7 @@ func crouch() -> void:
 			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			player_coll_shape.shape.height = PLAYER_HEIGHT
 			player_mesh_inst.mesh.height = PLAYER_HEIGHT
-			bump_area_coll_sh.shape.size.y = PLAYER_HEIGHT - 0.8
+			bump_area_coll_sh.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
 			crouching = false
 
 func handle_linear_damp() -> void:
@@ -224,7 +224,10 @@ func movement(physics_process_delta: float) -> void:
 		# If player is faster than its movement speed
 		if get_speed() > move_speed:
 			# In 4 quadrants of X and Z axis, if player is slower than its movement speed and faster than 0.4 times of its movement speed and player is trying to go to the quadrant that has its velocity vector in it
-			if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4):
+			if ((trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4)
+			 || (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4)
+			 || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4)
+			 || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4)):
 				move_vector.z = 0 # Stop Z axis acceleration
 				move_vector.x = 0 # Stop X axis acceleration
 			else:

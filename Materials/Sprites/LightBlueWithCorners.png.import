@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyy8iuj4iighw"
-path.s3tc="res://.godot/imported/LightBlueWithCorners.png-91ed143211d96e13c6d496febd6d9034.s3tc.ctex"
+path.s3tc="res://.godot/imported/LightBlueWithCorners.png-ecdf72c29d1611cfd89075419832869c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Materials/LightBlueWithCorners.png"
-dest_files=["res://.godot/imported/LightBlueWithCorners.png-91ed143211d96e13c6d496febd6d9034.s3tc.ctex"]
+source_file="res://Materials/Sprites/LightBlueWithCorners.png"
+dest_files=["res://.godot/imported/LightBlueWithCorners.png-ecdf72c29d1611cfd89075419832869c.s3tc.ctex"]
 
 [params]
 
