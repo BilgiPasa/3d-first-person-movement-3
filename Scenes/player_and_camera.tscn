@@ -28,7 +28,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=1566701192]
 
-[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "dont_uncrouch_area", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_sh")]
+[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "grounded_area", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
 collision_layer = 2
 physics_material_override = ExtResource("1_a5f1f")
 script = ExtResource("3_t5fc0")
@@ -38,10 +38,11 @@ can_jump_timer = NodePath("CanJumpTimer")
 jumping_timer = NodePath("JumpingTimer")
 grounded_area = NodePath("GroundedArea")
 dont_uncrouch_area = NodePath("DontUncrouchArea")
+dont_uncrouch_area_coll_shape = NodePath("DontUncrouchArea/CollisionShape3D")
 player_coll_shape = NodePath("PlayerCollShape")
 player_mesh_inst = NodePath("PlayerCollShape/PlayerMeshInst")
 bump_area = NodePath("PlayerCollShape/BumpArea")
-bump_area_coll_sh = NodePath("PlayerCollShape/BumpArea/CollisionShape3D")
+bump_area_coll_shape = NodePath("PlayerCollShape/BumpArea/CollisionShape3D")
 
 [node name="CameraPosition" type="Node3D" parent="Player" unique_id=1390214656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
@@ -62,7 +63,7 @@ collision_layer = 2
 shape = SubResource("SphereShape3D_5s483")
 
 [node name="DontUncrouchArea" type="Area3D" parent="Player" unique_id=174286758]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/DontUncrouchArea" unique_id=266258544]

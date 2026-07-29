@@ -19,7 +19,7 @@ var move_vector: Vector3
 var move_vector_relative_to_world: Vector3
 var lin_vel_in_air_relative_to_cam: Vector3 # linear velocity in air relative to camera
 
-# For optimization in movement
+# For Optimization In Movement
 var trying_to_go_forward_in_air: bool
 var trying_to_go_back_in_air: bool
 var trying_to_go_right_in_air: bool
@@ -69,8 +69,9 @@ var bumping: bool
 var y_rot_deg: float # This variable is assigned by the player_and_camera script
 
 # Player Sizes
-const PLAYER_HEIGHT: float = 2.0 # Don't make it smaller than 0.9
-const CROUCH_HEIGHT: float = 1.5 # Don't make it smaller than 0.9
+const PLAYER_HEIGHT: float = 2.5 # Don't make it smaller than 0.9
+const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # Don't make it bigger than 0.5 because if you do, you might see a visual bug
+var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 
 # @export Variables
 @export var camera_position: Node3D
@@ -79,10 +80,11 @@ const CROUCH_HEIGHT: float = 1.5 # Don't make it smaller than 0.9
 @export var jumping_timer: Timer
 @export var grounded_area: Area3D
 @export var dont_uncrouch_area: Area3D
+@export var dont_uncrouch_area_coll_shape: CollisionShape3D # It has a sphere shape
 @export var player_coll_shape: CollisionShape3D # It has a capsule shape
 @export var player_mesh_inst: MeshInstance3D # It has a capsule mesh
 @export var bump_area: Area3D
-@export var bump_area_coll_sh: CollisionShape3D # It has a box shape
+@export var bump_area_coll_shape: CollisionShape3D # It has a box shape
 
 func _ready() -> void:
 	mass = 75
@@ -96,10 +98,11 @@ func _ready() -> void:
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
-	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 4) - 0.025, 0)
+	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 2) - player_coll_shape.shape.radius, 0)
+	dont_uncrouch_area_coll_shape.shape.radius = player_coll_shape.shape.radius
 	player_coll_shape.shape.height = PLAYER_HEIGHT
 	player_mesh_inst.mesh.height = PLAYER_HEIGHT
-	bump_area_coll_sh.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
+	bump_area_coll_shape.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
 
 # * Get inputs
 func _process(_delta: float) -> void:
@@ -160,15 +163,15 @@ func crouch() -> void:
 		return
 
 	if crouch_input && !crouching:
-		camera_position.position = Vector3(0, (CROUCH_HEIGHT / 2) - 0.25, 0)
-		slope_ray_cast.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
-		grounded_area.position = Vector3(0, -CROUCH_HEIGHT / 2, 0)
-		player_coll_shape.shape.height = CROUCH_HEIGHT
-		player_mesh_inst.mesh.height = CROUCH_HEIGHT
-		bump_area_coll_sh.shape.size.y = (CROUCH_HEIGHT / 2) + 0.1
+		camera_position.position = Vector3(0, (crouch_height / 2) - 0.25, 0)
+		slope_ray_cast.position = Vector3(0, -crouch_height / 2, 0)
+		grounded_area.position = Vector3(0, -crouch_height / 2, 0)
+		player_coll_shape.shape.height = crouch_height
+		player_mesh_inst.mesh.height = crouch_height
+		bump_area_coll_shape.shape.size.y = (crouch_height / 2) + 0.1
 
 		if grounded:
-			position.y -= (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
+			position.y -= CROUCH_HEIGHT_DIFFERENCE / 2
 
 		crouching = true
 	elif crouching:
@@ -176,14 +179,14 @@ func crouch() -> void:
 
 		if !crouch_input && !dont_uncrouch:
 			if grounded:
-				position.y += (PLAYER_HEIGHT / 2) - (CROUCH_HEIGHT / 2)
+				position.y += CROUCH_HEIGHT_DIFFERENCE / 2
 
-			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			player_coll_shape.shape.height = PLAYER_HEIGHT
 			player_mesh_inst.mesh.height = PLAYER_HEIGHT
-			bump_area_coll_sh.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
+			bump_area_coll_shape.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
+			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			crouching = false
 
 func handle_linear_damp() -> void:

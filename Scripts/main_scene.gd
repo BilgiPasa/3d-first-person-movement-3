@@ -14,6 +14,7 @@ func _ready() -> void:
 	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	settings_menu.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	player_and_camera.position = Vector3(0, player_and_camera.player.PLAYER_HEIGHT / 2, 0)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed
