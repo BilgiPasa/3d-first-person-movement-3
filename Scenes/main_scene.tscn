@@ -18,9 +18,10 @@ background_mode = 2
 sky = SubResource("Sky_jv6wh")
 glow_enabled = true
 
-[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "speed_label", "pause_menu", "settings_menu")]
+[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "move_up_player_timer", "speed_label", "pause_menu", "settings_menu")]
 script = ExtResource("1_jv6wh")
 player_and_camera = NodePath("PlayerAndCamera")
+move_up_player_timer = NodePath("MoveUpPlayerTimer")
 speed_label = NodePath("CanvasLayer/SpeedLabel")
 pause_menu = NodePath("CanvasLayer/PauseMenu")
 settings_menu = NodePath("CanvasLayer/SettingsMenu")
@@ -36,6 +37,8 @@ shadow_enabled = true
 
 [node name="PlayerAndCamera" parent="." unique_id=1785156103 instance=ExtResource("1_52fb6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MoveUpPlayerTimer" type="Timer" parent="." unique_id=2021917314]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1161452187]
 
@@ -53,6 +56,7 @@ visible = false
 [node name="SettingsMenu" parent="CanvasLayer" unique_id=631766552 instance=ExtResource("5_iacmt")]
 visible = false
 
+[connection signal="timeout" from="MoveUpPlayerTimer" to="." method="_on_move_up_p_timer_timeout"]
 [connection signal="open_settings" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_open_settings"]
 [connection signal="resume_game" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_resume_game"]
 [connection signal="go_back" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_go_back"]

@@ -1,20 +1,25 @@
 extends Node3D
 
 @export var player_and_camera: PlayerAndCamera
+@export var move_up_player_timer: Timer
 @export var speed_label: Label
 @export var pause_menu: Control
 @export var settings_menu: Control
+const MOVE_UP_PLAYER_TIMER_SECONDS: int = 2
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	speed_label.process_mode = Node.PROCESS_MODE_INHERIT
 	speed_label.show()
 	pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	pause_menu.hide()
 	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	settings_menu.hide()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	player_and_camera.position = Vector3(0, player_and_camera.player.PLAYER_HEIGHT / 2, 0)
+	player_and_camera.player.position = Vector3(0, 0, 0) # position = position relative to the parent
+	move_up_player_timer.wait_time = MOVE_UP_PLAYER_TIMER_SECONDS
+	move_up_player_timer.start()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed
@@ -67,3 +72,8 @@ func _on_pause_menu_open_settings() -> void:
 
 func _on_settings_menu_go_back() -> void:
 	close_settings()
+
+# On Move Up Player Timer Timeout
+func _on_move_up_p_timer_timeout() -> void:
+	if player_and_camera.player.global_position.y < -200:
+		player_and_camera.player.global_position = Vector3(0, 300, 0)

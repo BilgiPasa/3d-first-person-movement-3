@@ -19,7 +19,7 @@ var move_vector: Vector3
 var move_vector_relative_to_world: Vector3
 var lin_vel_in_air_relative_to_cam: Vector3 # linear velocity in air relative to camera
 
-# For Optimization In Movement
+# Variables For Optimization In Movement
 var trying_to_go_forward_in_air: bool
 var trying_to_go_back_in_air: bool
 var trying_to_go_right_in_air: bool
@@ -27,6 +27,7 @@ var trying_to_go_left_in_air: bool
 
 # Crouch
 var crouch_speed: float = Defaults.NORMAL_SPEED * 2.0 / 3.0
+var min_sliding_speed: float = run_speed
 var crouching: bool = false
 var crouch_input: bool
 var dont_uncrouch: bool
@@ -44,16 +45,7 @@ const COYOTE_TIME_SECONDS: float = 0.15
 var coyote_time_counter: float
 
 # Player States
-enum States
-{
-	IDLE = 0,
-	CROUCHING = 1,
-	WALKING = 2,
-	RUNNING = 3,
-	CROUCH_WALKING = 4
-}
-
-# Player State Variable
+enum States{IDLE, CROUCHING, WALKING, RUNNING, CROUCH_WALKING, SLIDING}
 var current_state: States
 
 # Touch Detection
@@ -112,7 +104,7 @@ func _process(_delta: float) -> void:
 
 	# Forward is -Z, Backwards is Z, Right is X, Left is -X
 	move_vector = Vector3(Input.get_axis("move_left", "move_right"), 0, Input.get_axis("move_forward", "move_back")).normalized()
-	trying_to_go_forward = move_vector.z < -MIN
+	trying_to_go_forward = move_vector.z <= -MIN
 
 # * Handle other things
 func _physics_process(delta: float) -> void:
@@ -190,7 +182,7 @@ func crouch() -> void:
 			crouching = false
 
 func handle_linear_damp() -> void:
-	if grounded && !jumping:
+	if grounded && !jumping && current_state != States.SLIDING:
 		linear_damp = GROUND_LINEAR_DAMP
 		air_damp_active = false
 	else:
@@ -212,9 +204,9 @@ func movement(physics_process_delta: float) -> void:
 
 		# For optimization
 		trying_to_go_forward_in_air = trying_to_go_forward
-		trying_to_go_back_in_air = move_vector.z > MIN
-		trying_to_go_right_in_air = move_vector.x > MIN
-		trying_to_go_left_in_air = move_vector.x < -MIN
+		trying_to_go_back_in_air = move_vector.z >= MIN
+		trying_to_go_right_in_air = move_vector.x >= MIN
+		trying_to_go_left_in_air = move_vector.x <= -MIN
 
 		# If (player is faster than its movement speed in -Z and player is trying to go forward) or (player is faster than its movement speed in Z and player is trying to go backwards)
 		if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed):
@@ -239,7 +231,7 @@ func movement(physics_process_delta: float) -> void:
 					move_vector.z = 0 # Stop Z axis acceleration
 				else:
 					# If (player is trying to go forward or backwards) and not (player is trying to go forward and player has backwards velocity) and not (player is trying to go backwards and player has forward velocity)
-					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > MIN) && !(trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < -MIN):
+					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z >= MIN) && !(trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z <= -MIN):
 						if lin_vel_in_air_relative_to_cam.x > move_speed:
 							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
@@ -252,7 +244,7 @@ func movement(physics_process_delta: float) -> void:
 					move_vector.x = 0 # Stop X axis acceleration
 				else:
 					# If (player is trying to go right or left) and not (player is trying to go right and player has left velocity) and not (player is trying to go left and player has right velocity)
-					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < -MIN) && !(trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > MIN):
+					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x <= -MIN) && !(trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x >= MIN):
 						if lin_vel_in_air_relative_to_cam.z < -move_speed:
 							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.x) * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
@@ -272,24 +264,25 @@ func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 
 func state_machine(state: States) -> States:
 	if state == States.IDLE:
-		if get_speed() > MIN:
+		if get_speed() >= MIN:
 			return States.WALKING
+		elif crouching:
+			return States.CROUCHING
 		else:
-			if crouch_input:
-				return States.CROUCHING
-			else:
-				return States.IDLE
+			return States.IDLE
 	elif state == States.CROUCHING:
-		if get_speed() > MIN:
-			return States.CROUCH_WALKING
-		else:
-			if crouch_input:
-				return States.CROUCHING
+		if crouching:
+			if on_slope:
+				return States.SLIDING
+			elif get_speed() >= MIN:
+				return States.CROUCH_WALKING
 			else:
-				return States.IDLE
+				return States.CROUCHING
+		else:
+			return States.IDLE
 	elif state == States.WALKING:
-		if get_speed() > MIN:
-			if crouch_input:
+		if get_speed() >= MIN:
+			if crouching:
 				return States.CROUCH_WALKING
 			elif run_input:
 				return States.RUNNING
@@ -298,35 +291,49 @@ func state_machine(state: States) -> States:
 		else:
 			return States.IDLE
 	elif state == States.RUNNING:
-		if get_speed() > MIN:
+		if get_speed() >= MIN:
 			if crouching:
 				return States.CROUCH_WALKING
 			elif run_input:
 				return States.RUNNING
+			elif bumping || !trying_to_go_forward:
+				return States.WALKING
 			else:
-				if bumping || !trying_to_go_forward:
-					return States.WALKING
-				else:
-					return States.RUNNING
+				return States.RUNNING
 		else:
 			return States.IDLE
 	elif state == States.CROUCH_WALKING:
-		if get_speed() > MIN:
-			if crouch_input:
+		if crouching:
+			if on_slope:
+				return States.SLIDING
+			elif get_speed() >= min_sliding_speed:
+				return States.SLIDING
+			elif get_speed() >= MIN:
 				return States.CROUCH_WALKING
 			else:
-				return States.WALKING
+				return States.CROUCHING
 		else:
-			return States.CROUCHING
+			return States.WALKING
+	elif state == States.SLIDING:
+		if crouching:
+			if on_slope:
+				return States.SLIDING
+			elif get_speed() >= min_sliding_speed:
+				return States.SLIDING
+			else:
+				return States.CROUCH_WALKING
+		else:
+			return States.WALKING
 	else:
 		return state
 
+# Return the player speed at XZ plane
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
 func gravity_control() -> void:
-	if touching && grounded:
-		if on_slope && linear_velocity.y > MIN:
+	if touching && grounded && on_slope && current_state != States.SLIDING:
+		if linear_velocity.y >= MIN:
 			gravity_scale = 1
 			apply_force((gravity_amount - 10) * mass * Vector3.UP)
 		else:
@@ -336,7 +343,7 @@ func gravity_control() -> void:
 
 func move_speed_control() -> void:
 	match current_state:
-		States.CROUCHING, States.CROUCH_WALKING:
+		States.CROUCHING, States.CROUCH_WALKING, States.SLIDING:
 			move_speed = crouch_speed
 		States.RUNNING:
 			move_speed = run_speed
