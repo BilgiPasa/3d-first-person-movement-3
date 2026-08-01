@@ -2,7 +2,9 @@ extends Node3D
 
 @export var player_and_camera: PlayerAndCamera
 @export var move_up_player_timer: Timer
+@export var fps_label_timer: Timer
 @export var speed_label: Label
+@export var fps_label: Label
 @export var pause_menu: Control
 @export var settings_menu: Control
 const MOVE_UP_PLAYER_TIMER_SECONDS: int = 2
@@ -20,6 +22,9 @@ func _ready() -> void:
 	player_and_camera.player.position = Vector3(0, 0, 0) # position = position relative to the parent
 	move_up_player_timer.wait_time = MOVE_UP_PLAYER_TIMER_SECONDS
 	move_up_player_timer.start()
+	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
+	fps_label_timer.wait_time = 1
+	fps_label_timer.start()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed
@@ -77,3 +82,8 @@ func _on_settings_menu_go_back() -> void:
 func _on_move_up_p_timer_timeout() -> void:
 	if player_and_camera.player.global_position.y < -200:
 		player_and_camera.player.global_position = Vector3(0, 300, 0)
+
+# Updates the FPS Label every second
+func _on_fps_label_timer_timeout() -> void:
+	if fps_label.visible:
+		fps_label.text = "FPS: %d" % Engine.get_frames_per_second()

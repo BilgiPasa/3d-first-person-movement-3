@@ -7,8 +7,7 @@ const GROUND_MOVE_MULT: float = 750.01
 const GROUND_LINEAR_DAMP: float = 12.4
 const AIR_LINEAR_DAMP: float = 0.001
 const MIN: float = 0.1
-var normal_speed: int = Defaults.NORMAL_SPEED
-var run_speed: float = Defaults.NORMAL_SPEED * 4.0 / 3.0
+var run_speed: float = Globals.normal_speed * 4.0 / 3.0
 var gravity_amount: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float
 var run_input: bool
@@ -26,7 +25,7 @@ var trying_to_go_right_in_air: bool
 var trying_to_go_left_in_air: bool
 
 # Crouch
-var crouch_speed: float = Defaults.NORMAL_SPEED * 2.0 / 3.0
+var crouch_speed: float = Globals.normal_speed * 2.0 / 3.0
 var min_sliding_speed: float = run_speed
 var crouching: bool = false
 var crouch_input: bool
@@ -35,7 +34,6 @@ var dont_uncrouch: bool
 # Jump
 const CAN_JUMP_TIMER_SECONDS: float = 0.3
 const JUMPING_TIMER_SECONDS: float = 0.1
-var jump_force: int = Defaults.JUMP_FORCE
 var can_jump: bool = true
 var jumping: bool = false
 var jump_input: bool
@@ -134,7 +132,7 @@ func jump() -> void:
 	if jump_input && can_jump && !jumping && ((touching && grounded) || (!grounded && coyote_time_counter > 0)):
 		can_jump = false
 		jumping = true
-		linear_velocity.y = jump_force
+		linear_velocity.y = Globals.jump_force
 		can_jump_timer.start()
 		jumping_timer.start()
 
@@ -344,11 +342,13 @@ func gravity_control() -> void:
 func move_speed_control() -> void:
 	match current_state:
 		States.CROUCHING, States.CROUCH_WALKING, States.SLIDING:
+			crouch_speed = Globals.normal_speed * 2.0 / 3.0
 			move_speed = crouch_speed
 		States.RUNNING:
+			run_speed = Globals.normal_speed * 4.0 / 3.0
 			move_speed = run_speed
 		_:
-			move_speed = normal_speed
+			move_speed = Globals.normal_speed
 
 func low_velocity_reseter() -> void:
 	if abs(linear_velocity.z) <= MIN:

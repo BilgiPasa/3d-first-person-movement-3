@@ -18,11 +18,13 @@ background_mode = 2
 sky = SubResource("Sky_jv6wh")
 glow_enabled = true
 
-[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "move_up_player_timer", "speed_label", "pause_menu", "settings_menu")]
+[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "move_up_player_timer", "fps_label_timer", "speed_label", "fps_label", "pause_menu", "settings_menu")]
 script = ExtResource("1_jv6wh")
 player_and_camera = NodePath("PlayerAndCamera")
 move_up_player_timer = NodePath("MoveUpPlayerTimer")
+fps_label_timer = NodePath("FPSLabelTimer")
 speed_label = NodePath("CanvasLayer/SpeedLabel")
+fps_label = NodePath("CanvasLayer/FPSLabel")
 pause_menu = NodePath("CanvasLayer/PauseMenu")
 settings_menu = NodePath("CanvasLayer/SettingsMenu")
 
@@ -40,15 +42,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MoveUpPlayerTimer" type="Timer" parent="." unique_id=2021917314]
 
+[node name="FPSLabelTimer" type="Timer" parent="." unique_id=2021167383]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1161452187]
 
 [node name="SpeedLabel" type="Label" parent="CanvasLayer" unique_id=626585624]
-offset_left = 40.0
-offset_top = 20.0
-offset_right = 306.0
-offset_bottom = 89.0
-theme_override_font_sizes/font_size = 50
+offset_left = 30.0
+offset_top = 15.0
+offset_right = 269.0
+offset_bottom = 78.0
+theme_override_font_sizes/font_size = 45
 text = "Speed: xy.z"
+
+[node name="FPSLabel" type="Label" parent="CanvasLayer" unique_id=1056768184]
+offset_left = 30.0
+offset_top = 80.0
+offset_right = 141.0
+offset_bottom = 135.0
+theme_override_font_sizes/font_size = 40
+text = "FPS: x"
 
 [node name="PauseMenu" parent="CanvasLayer" unique_id=788778746 instance=ExtResource("2_6l7je")]
 visible = false
@@ -57,6 +69,7 @@ visible = false
 visible = false
 
 [connection signal="timeout" from="MoveUpPlayerTimer" to="." method="_on_move_up_p_timer_timeout"]
+[connection signal="timeout" from="FPSLabelTimer" to="." method="_on_fps_label_timer_timeout"]
 [connection signal="open_settings" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_open_settings"]
 [connection signal="resume_game" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_resume_game"]
 [connection signal="go_back" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_go_back"]

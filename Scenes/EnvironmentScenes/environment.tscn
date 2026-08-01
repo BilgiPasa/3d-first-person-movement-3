@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://2ipg0oj6jbv1"]
 
+[ext_resource type="ArrayOccluder3D" uid="uid://du8osdpwp5gl0" path="res://Scenes/EnvironmentScenes/environment.occ" id="1_8nqb5"]
 [ext_resource type="Texture2D" uid="uid://d03ws3dcm58v3" path="res://Materials/Sprites/DarkBlueWithCorners.png" id="1_g5ire"]
 [ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_r42gm"]
 [ext_resource type="PackedScene" uid="uid://dfd80qt21v6d7" path="res://Scenes/EnvironmentScenes/medium_platform.tscn" id="3_0neh7"]
@@ -49,6 +50,9 @@ size = Vector3(58, 0.1, 6)
 size = Vector3(58, 0.1, 6)
 
 [node name="Environment" type="Node3D" unique_id=2118310843]
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=1481457809]
+occluder = ExtResource("1_8nqb5")
 
 [node name="MainGround" type="StaticBody3D" parent="." unique_id=737079153]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
