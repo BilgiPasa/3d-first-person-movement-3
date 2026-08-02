@@ -11,7 +11,7 @@ var mouse_sensitivity: int = Defaults.MOUSE_SENSITIVITY
 var normal_speed: int = Defaults.NORMAL_SPEED
 
 # Player Jump
-var jump_force: int = Defaults.JUMP_FORCE
+var jump_speed: int = Defaults.JUMP_SPEED
 
 # Max FPS Setting
 var max_fps_setting: int = Defaults.MAX_FPS_SETTING

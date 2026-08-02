@@ -5,7 +5,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_124y6"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="SettingsMenu" type="Control" unique_id=631766552 node_paths=PackedStringArray("go_back_button")]
+[node name="SettingsMenu" type="Control" unique_id=631766552 node_paths=PackedStringArray("fov_label", "fov_slider", "max_fps_label", "max_fps_slider", "mouse_sensitivity_label", "mouse_sensitivity_slider", "sprint_fov_change_label", "sprint_fov_change_slider", "speed_label_on_off_button", "fps_label_on_off_button", "go_back_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +13,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_icv2g")
+fov_label = NodePath("Panel/FOVLabel")
+fov_slider = NodePath("Panel/FOVSlider")
+max_fps_label = NodePath("Panel/MaxFPSLabel")
+max_fps_slider = NodePath("Panel/MaxFPSSlider")
+mouse_sensitivity_label = NodePath("Panel/MouseSensitivityLabel")
+mouse_sensitivity_slider = NodePath("Panel/MouseSensitivitySlider")
+sprint_fov_change_label = NodePath("Panel/SprintFOVChangeLabel")
+sprint_fov_change_slider = NodePath("Panel/SprintFOVChangeSlider")
+speed_label_on_off_button = NodePath("Panel/SpeedLabelOnOffButton")
+fps_label_on_off_button = NodePath("Panel/FPSLabelOnOffButton")
 go_back_button = NodePath("Panel/GoBackButton")
 
 [node name="Panel" type="Panel" parent="." unique_id=333397100]
@@ -37,6 +47,264 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 100
 text = "Settings"
 
+[node name="FOVLabel" type="Label" parent="Panel" unique_id=2003425371]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -505.0
+offset_top = -300.0
+offset_right = -352.9995
+offset_bottom = -230.99988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "FOV: x"
+
+[node name="FOVSlider" type="HSlider" parent="Panel" unique_id=210393229]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -685.0
+offset_top = -210.0
+offset_right = -417.5
+offset_bottom = -190.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../ResetSettingsButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../MaxFPSSlider")
+focus_neighbor_bottom = NodePath("../MouseSensitivitySlider")
+focus_next = NodePath("../MaxFPSSlider")
+focus_previous = NodePath("../GoBackButton")
+min_value = 30.0
+max_value = 110.0
+value = 90.0
+
+[node name="MaxFPSLabel" type="Label" parent="Panel" unique_id=1481756696]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 290.0
+offset_top = -300.0
+offset_right = 546.0
+offset_bottom = -231.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Max FPS: x"
+
+[node name="MaxFPSSlider" type="HSlider" parent="Panel" unique_id=1322661116]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 145.0
+offset_top = -210.0
+offset_right = 412.5
+offset_bottom = -190.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../FOVSlider")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath("../SprintFOVChangeSlider")
+focus_next = NodePath("../MouseSensitivitySlider")
+focus_previous = NodePath("../FOVSlider")
+max_value = 8.0
+value = 7.0
+
+[node name="MouseSensitivityLabel" type="Label" parent="Panel" unique_id=1811846778]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -660.0
+offset_top = -110.0
+offset_right = -183.0
+offset_bottom = -41.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Mouse Sensitivity: x"
+
+[node name="MouseSensitivitySlider" type="HSlider" parent="Panel" unique_id=1543415220]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -685.0
+offset_top = -20.0
+offset_right = -417.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../ResetSettingsButton")
+focus_neighbor_top = NodePath("../FOVSlider")
+focus_neighbor_right = NodePath("../SprintFOVChangeSlider")
+focus_neighbor_bottom = NodePath("../SpeedLabelOnOffButton")
+focus_next = NodePath("../SprintFOVChangeSlider")
+focus_previous = NodePath("../MaxFPSSlider")
+min_value = 1.0
+max_value = 200.0
+value = 100.0
+
+[node name="SprintFOVChangeLabel" type="Label" parent="Panel" unique_id=628952085]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 155.0
+offset_top = -110.0
+offset_right = 659.0
+offset_bottom = -41.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Sprint FOV Change: x"
+
+[node name="SprintFOVChangeSlider" type="HSlider" parent="Panel" unique_id=2044105842]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 145.0
+offset_top = -20.0
+offset_right = 412.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../MouseSensitivitySlider")
+focus_neighbor_top = NodePath("../MaxFPSSlider")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath("../FPSLabelOnOffButton")
+focus_next = NodePath("../SpeedLabelOnOffButton")
+focus_previous = NodePath("../MouseSensitivitySlider")
+max_value = 20.0
+value = 10.0
+
+[node name="SpeedLabelOnOffButton" type="Button" parent="Panel" unique_id=1743201047]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -650.0
+offset_top = 100.0
+offset_right = -190.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath("../ResetSettingsButton")
+focus_neighbor_top = NodePath("../MouseSensitivitySlider")
+focus_neighbor_right = NodePath("../FPSLabelOnOffButton")
+focus_neighbor_bottom = NodePath("../PlayerTweaksButton")
+focus_next = NodePath("../FPSLabelOnOffButton")
+focus_previous = NodePath("../SprintFOVChangeSlider")
+theme_override_font_sizes/font_size = 50
+text = "Hide Speed Label"
+
+[node name="FPSLabelOnOffButton" type="Button" parent="Panel" unique_id=246451214]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 220.0
+offset_top = 100.0
+offset_right = 600.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath("../SpeedLabelOnOffButton")
+focus_neighbor_top = NodePath("../SprintFOVChangeSlider")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath("../PlayerTweaksButton")
+focus_next = NodePath("../PlayerTweaksButton")
+focus_previous = NodePath("../SpeedLabelOnOffButton")
+theme_override_font_sizes/font_size = 50
+text = "Hide FPS Label"
+
+[node name="InfoLabelForFPSLabel" type="Label" parent="Panel" unique_id=981097227]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 604.5
+offset_top = 105.0
+offset_right = 842.5
+offset_bottom = 164.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "* Shows average frames
+   rendered every second"
+
+[node name="PlayerTweaksButton" type="Button" parent="Panel" unique_id=1768105915]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = 235.0
+offset_right = 210.0
+offset_bottom = 326.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath("../ResetSettingsButton")
+focus_neighbor_top = NodePath("../SpeedLabelOnOffButton")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath("../GoBackButton")
+focus_next = NodePath("../GoBackButton")
+focus_previous = NodePath("../FPSLabelOnOffButton")
+theme_override_font_sizes/font_size = 60
+text = "Player Tweaks"
+
+[node name="ResetSettingsButton" type="Button" parent="Panel" unique_id=956286772]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -77.0
+offset_right = 277.0
+offset_bottom = -20.0
+grow_vertical = 0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../PlayerTweaksButton")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../GoBackButton")
+focus_previous = NodePath("../GoBackButton")
+theme_override_font_sizes/font_size = 35
+text = "Reset Settings"
+
 [node name="GoBackButton" type="Button" parent="Panel" unique_id=986727638]
 layout_mode = 1
 anchors_preset = 3
@@ -44,14 +312,28 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -223.0
-offset_top = -87.0
-offset_right = -20.0
-offset_bottom = -10.0
+offset_left = -233.0
+offset_top = -97.0
+offset_right = -30.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
+focus_neighbor_left = NodePath("../ResetSettingsButton")
+focus_neighbor_top = NodePath("../PlayerTweaksButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../FOVSlider")
+focus_previous = NodePath("../PlayerTweaksButton")
 theme_override_font_sizes/font_size = 50
 text = "Go Back"
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="value_changed" from="Panel/FOVSlider" to="." method="_on_fov_slider_value_changed"]
+[connection signal="value_changed" from="Panel/MaxFPSSlider" to="." method="_on_max_fps_sldr_value_changed"]
+[connection signal="value_changed" from="Panel/MouseSensitivitySlider" to="." method="_on_m_s_slider_value_changed"]
+[connection signal="value_changed" from="Panel/SprintFOVChangeSlider" to="." method="_on_s_fov_c_sldr_value_changed"]
+[connection signal="pressed" from="Panel/SpeedLabelOnOffButton" to="." method="_on_spd_lbl_on_off_btn_pressed"]
+[connection signal="pressed" from="Panel/FPSLabelOnOffButton" to="." method="_on_fps_lbl_on_off_btn_pressed"]
+[connection signal="pressed" from="Panel/PlayerTweaksButton" to="." method="_on_player_tweaks_btn_pressed"]
+[connection signal="pressed" from="Panel/ResetSettingsButton" to="." method="_on_reset_settings_btn_pressed"]
 [connection signal="pressed" from="Panel/GoBackButton" to="." method="_on_go_back_button_pressed"]

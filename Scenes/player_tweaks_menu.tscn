@@ -1,0 +1,167 @@
+[gd_scene format=3 uid="uid://dxda86d1wpe3r"]
+
+[ext_resource type="Script" uid="uid://d3nmenatl8lwp" path="res://Scripts/player_tweaks_menu.gd" id="1_tm0q0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5s483"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="PlayerTweaksMenu" type="Control" unique_id=1924415816 node_paths=PackedStringArray("normal_speed_label", "normal_speed_slider", "jump_speed_label", "jump_speed_slider", "go_back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tm0q0")
+normal_speed_label = NodePath("Panel/NormalSpeedLabel")
+normal_speed_slider = NodePath("Panel/NormalSpeedSlider")
+jump_speed_label = NodePath("Panel/JumpSpeedLabel")
+jump_speed_slider = NodePath("Panel/JumpSpeedSlider")
+go_back_button = NodePath("Panel/GoBackButton")
+
+[node name="Panel" type="Panel" parent="." unique_id=1791096207]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5s483")
+
+[node name="PlayerTweaksLabel" type="Label" parent="Panel" unique_id=732910867]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -309.5
+offset_top = 50.0
+offset_right = 309.5
+offset_bottom = 174.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 90
+text = "Player Tweaks"
+
+[node name="NormalSpeedLabel" type="Label" parent="Panel" unique_id=2118426203]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -585.0
+offset_top = -90.0
+offset_right = -238.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Normal Speed: x"
+
+[node name="NormalSpeedSlider" type="HSlider" parent="Panel" unique_id=568060565]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -685.0
+offset_top = 10.0
+offset_right = -417.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../JumpSpeedSlider")
+focus_neighbor_bottom = NodePath("../GoBackButton")
+focus_next = NodePath("../JumpSpeedSlider")
+focus_previous = NodePath("../GoBackButton")
+min_value = 1.0
+value = 9.0
+
+[node name="JumpSpeedLabel" type="Label" parent="Panel" unique_id=1155936619]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 255.0
+offset_top = -90.0
+offset_right = 596.0001
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Jump Speed: x"
+
+[node name="JumpSpeedSlider" type="HSlider" parent="Panel" unique_id=2000856079]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 145.0
+offset_top = 10.0
+offset_right = 412.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../NormalSpeedSlider")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath("../GoBackButton")
+focus_next = NodePath("../GoBackButton")
+focus_previous = NodePath("../NormalSpeedSlider")
+min_value = 1.0
+value = 13.0
+
+[node name="ResetPlayerTweaksButton" type="Button" parent="Panel" unique_id=336970787]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -77.0
+offset_right = 382.0
+offset_bottom = -20.0
+grow_vertical = 0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../NormalSpeedSlider")
+focus_neighbor_right = NodePath("../GoBackButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../GoBackButton")
+focus_previous = NodePath("../GoBackButton")
+theme_override_font_sizes/font_size = 35
+text = "Reset Player Tweaks"
+
+[node name="GoBackButton" type="Button" parent="Panel" unique_id=1226745498]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -233.0
+offset_top = -97.0
+offset_right = -30.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_neighbor_left = NodePath("../ResetPlayerTweaksButton")
+focus_neighbor_top = NodePath("../JumpSpeedSlider")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../NormalSpeedSlider")
+focus_previous = NodePath("../JumpSpeedSlider")
+theme_override_font_sizes/font_size = 50
+text = "Go Back"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="value_changed" from="Panel/NormalSpeedSlider" to="." method="_on_n_spd_slider_value_changed"]
+[connection signal="value_changed" from="Panel/JumpSpeedSlider" to="." method="_on_j_spd_slider_value_changed"]
+[connection signal="pressed" from="Panel/ResetPlayerTweaksButton" to="." method="_on_reset_p_tweaks_btn_pressed"]
+[connection signal="pressed" from="Panel/GoBackButton" to="." method="_on_go_back_button_pressed"]

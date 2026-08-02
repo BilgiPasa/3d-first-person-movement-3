@@ -11,18 +11,12 @@ var run_speed: float = Globals.normal_speed * 4.0 / 3.0
 var gravity_amount: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float
 var run_input: bool
-var trying_to_go_forward: bool
+var trying_to_move_forward: bool
 var air_damp_active: bool
 var on_slope: bool
 var move_vector: Vector3
 var move_vector_relative_to_world: Vector3
 var lin_vel_in_air_relative_to_cam: Vector3 # linear velocity in air relative to camera
-
-# Variables For Optimization In Movement
-var trying_to_go_forward_in_air: bool
-var trying_to_go_back_in_air: bool
-var trying_to_go_right_in_air: bool
-var trying_to_go_left_in_air: bool
 
 # Crouch
 var crouch_speed: float = Globals.normal_speed * 2.0 / 3.0
@@ -100,9 +94,9 @@ func _process(_delta: float) -> void:
 	crouch_input = Input.is_action_pressed("crouch")
 	run_input = Input.is_action_pressed("run") && Input.is_action_pressed("move_forward")
 
-	# Forward is -Z, Backwards is Z, Right is X, Left is -X
+	# Forward is -Z, Back is Z, Right is X, Left is -X
 	move_vector = Vector3(Input.get_axis("move_left", "move_right"), 0, Input.get_axis("move_forward", "move_back")).normalized()
-	trying_to_go_forward = move_vector.z <= -MIN
+	trying_to_move_forward = move_vector.z <= -MIN
 
 # * Handle other things
 func _physics_process(delta: float) -> void:
@@ -132,7 +126,7 @@ func jump() -> void:
 	if jump_input && can_jump && !jumping && ((touching && grounded) || (!grounded && coyote_time_counter > 0)):
 		can_jump = false
 		jumping = true
-		linear_velocity.y = Globals.jump_force
+		linear_velocity.y = Globals.jump_speed
 		can_jump_timer.start()
 		jumping_timer.start()
 
@@ -200,55 +194,36 @@ func movement(physics_process_delta: float) -> void:
 	else:
 		lin_vel_in_air_relative_to_cam = rotate_vector_around_y_axis(linear_velocity, -deg_to_rad(y_rot_deg))
 
-		# For optimization
-		trying_to_go_forward_in_air = trying_to_go_forward
-		trying_to_go_back_in_air = move_vector.z >= MIN
-		trying_to_go_right_in_air = move_vector.x >= MIN
-		trying_to_go_left_in_air = move_vector.x <= -MIN
-
-		# If (player is faster than its movement speed in -Z and player is trying to go forward) or (player is faster than its movement speed in Z and player is trying to go backwards)
-		if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed):
+		# If (player is moving forward and player is faster than its movement speed in -Z) or (player is moving back and player is faster than its movement speed in Z)
+		if (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed) || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed):
 			move_vector.z = 0 # Stop Z axis acceleration
 
-		# If (player is faster than its movement speed in X and player is trying to go right) or (player is faster than its movement speed in -X and player is trying to go left)
-		if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed):
+		# If (player is moving right and player is faster than its movement speed in X) or (player is moving left and player is faster than its movement speed in -X)
+		if (move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed) || (move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed):
 			move_vector.x = 0 # Stop X axis acceleration
 
 		# If player is faster than its movement speed
 		if get_speed() > move_speed:
-			# In 4 quadrants of X and Z axis, if player is slower than its movement speed and faster than 0.4 times of its movement speed and player is trying to go to the quadrant that has its velocity vector in it
-			if ((trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4)
-			 || (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z > -move_speed && lin_vel_in_air_relative_to_cam.z < -move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4)
-			 || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x < move_speed && lin_vel_in_air_relative_to_cam.x > move_speed * 0.4)
-			 || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z < move_speed && lin_vel_in_air_relative_to_cam.z > move_speed * 0.4 && trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x > -move_speed && lin_vel_in_air_relative_to_cam.x < -move_speed * 0.4)):
+			# In 4 quadrants of Z and X axis, if player is moving diagonally and player is faster than half of its movement speed in both Z and X axis individually
+			if ((move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2 && move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2)
+			 || (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2 && move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2)
+			 || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2 && move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2)
+			 || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2 && move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2)):
 				move_vector.z = 0 # Stop Z axis acceleration
 				move_vector.x = 0 # Stop X axis acceleration
 			else:
-				# If (player is faster than half of its movement speed in -Z and player is trying to go forward) or (player is faster than half of its movement speed in Z and player is trying to go backwards)
-				if (trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
-					move_vector.z = 0 # Stop Z axis acceleration
-				else:
-					# If (player is trying to go forward or backwards) and not (player is trying to go forward and player has backwards velocity) and not (player is trying to go backwards and player has forward velocity)
-					if (trying_to_go_forward_in_air || trying_to_go_back_in_air) && !(trying_to_go_forward_in_air && lin_vel_in_air_relative_to_cam.z >= MIN) && !(trying_to_go_back_in_air && lin_vel_in_air_relative_to_cam.z <= -MIN):
-						if lin_vel_in_air_relative_to_cam.x > move_speed:
-							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
-						elif lin_vel_in_air_relative_to_cam.x < -move_speed:
-							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.z) * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
-
-				# If (player is faster than half of its movement speed in X and player is trying to go right) or (player is faster than half of its movement speed in -X and player is trying to go left)
-				if (trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x > move_speed / 2) || (trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x < -move_speed / 2):
-					move_vector.x = 0 # Stop X axis acceleration
-				else:
-					# If (player is trying to go right or left) and not (player is trying to go right and player has left velocity) and not (player is trying to go left and player has right velocity)
-					if (trying_to_go_right_in_air || trying_to_go_left_in_air) && !(trying_to_go_right_in_air && lin_vel_in_air_relative_to_cam.x <= -MIN) && !(trying_to_go_left_in_air && lin_vel_in_air_relative_to_cam.x >= MIN):
-						if lin_vel_in_air_relative_to_cam.z < -move_speed:
-							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.x) * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
-						elif lin_vel_in_air_relative_to_cam.z > move_speed:
-							move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
-							apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * abs(move_vector_relative_to_world.x) * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
+				# If (player is moving forward and not (player has back velocity)) or (player is moving back and not (player has forward velocity))
+				if (move_vector.z <= -MIN && !(lin_vel_in_air_relative_to_cam.z >= MIN)) || (move_vector.z >= MIN && !(lin_vel_in_air_relative_to_cam.z <= -MIN)):
+					if lin_vel_in_air_relative_to_cam.x > move_speed:
+						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
+					elif lin_vel_in_air_relative_to_cam.x < -move_speed:
+						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
+				# Else if (player is moving right and not (player has left velocity)) || (player is moving left and not (player has right velocity))
+				elif (move_vector.x >= MIN && !(lin_vel_in_air_relative_to_cam.x <= -MIN)) || (move_vector.x <= -MIN && !(lin_vel_in_air_relative_to_cam.x >= MIN)):
+					if lin_vel_in_air_relative_to_cam.z < -move_speed:
+						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
+					elif lin_vel_in_air_relative_to_cam.z > move_speed:
+						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
 
 		move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 
@@ -294,7 +269,7 @@ func state_machine(state: States) -> States:
 				return States.CROUCH_WALKING
 			elif run_input:
 				return States.RUNNING
-			elif bumping || !trying_to_go_forward:
+			elif bumping || !trying_to_move_forward:
 				return States.WALKING
 			else:
 				return States.RUNNING

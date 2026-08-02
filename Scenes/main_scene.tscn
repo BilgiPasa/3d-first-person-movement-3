@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dgswa7otbkuth" path="res://Scenes/pause_menu.tscn" id="2_6l7je"]
 [ext_resource type="PackedScene" uid="uid://2ipg0oj6jbv1" path="res://Scenes/EnvironmentScenes/environment.tscn" id="2_x6ack"]
 [ext_resource type="PackedScene" uid="uid://wbiuygagbqyl" path="res://Scenes/settings_menu.tscn" id="5_iacmt"]
+[ext_resource type="PackedScene" uid="uid://dxda86d1wpe3r" path="res://Scenes/player_tweaks_menu.tscn" id="6_6ev3c"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6l7je"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -18,7 +19,7 @@ background_mode = 2
 sky = SubResource("Sky_jv6wh")
 glow_enabled = true
 
-[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "move_up_player_timer", "fps_label_timer", "speed_label", "fps_label", "pause_menu", "settings_menu")]
+[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player_and_camera", "move_up_player_timer", "fps_label_timer", "speed_label", "fps_label", "pause_menu", "settings_menu", "player_tweaks_menu")]
 script = ExtResource("1_jv6wh")
 player_and_camera = NodePath("PlayerAndCamera")
 move_up_player_timer = NodePath("MoveUpPlayerTimer")
@@ -27,6 +28,8 @@ speed_label = NodePath("CanvasLayer/SpeedLabel")
 fps_label = NodePath("CanvasLayer/FPSLabel")
 pause_menu = NodePath("CanvasLayer/PauseMenu")
 settings_menu = NodePath("CanvasLayer/SettingsMenu")
+player_tweaks_menu = NodePath("CanvasLayer/PlayerTweaksMenu")
+fps_label_initial_position = Vector2(30, 80)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=876222076]
 environment = SubResource("Environment_x6ack")
@@ -68,8 +71,17 @@ visible = false
 [node name="SettingsMenu" parent="CanvasLayer" unique_id=631766552 instance=ExtResource("5_iacmt")]
 visible = false
 
+[node name="PlayerTweaksMenu" parent="CanvasLayer" unique_id=1924415816 instance=ExtResource("6_6ev3c")]
+visible = false
+
 [connection signal="timeout" from="MoveUpPlayerTimer" to="." method="_on_move_up_p_timer_timeout"]
 [connection signal="timeout" from="FPSLabelTimer" to="." method="_on_fps_label_timer_timeout"]
 [connection signal="open_settings" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_open_settings"]
 [connection signal="resume_game" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_resume_game"]
 [connection signal="go_back" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_go_back"]
+[connection signal="hide_fps_label" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_hide_fps_lbl"]
+[connection signal="hide_speed_label" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_hide_spd_lbl"]
+[connection signal="open_player_tweaks_menu" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_open_p_t_m"]
+[connection signal="show_fps_label" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_show_fps_lbl"]
+[connection signal="show_speed_label" from="CanvasLayer/SettingsMenu" to="." method="_on_settings_menu_show_spd_lbl"]
+[connection signal="go_back" from="CanvasLayer/PlayerTweaksMenu" to="." method="_on_player_tweaks_menu_go_back"]
