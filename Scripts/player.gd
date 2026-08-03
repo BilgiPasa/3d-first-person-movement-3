@@ -7,6 +7,7 @@ const GROUND_MOVE_MULT: float = 750.01
 const GROUND_LINEAR_DAMP: float = 12.4
 const AIR_LINEAR_DAMP: float = 0.001
 const MIN: float = 0.1
+const RESET_L_L_V_TIMER_SECONDS: float = 0.5 # Reset Low Linear Velocity Timer Seconds
 var run_speed: float = Globals.normal_speed * 4.0 / 3.0
 var gravity_amount: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float
@@ -16,7 +17,7 @@ var air_damp_active: bool
 var on_slope: bool
 var move_vector: Vector3
 var move_vector_relative_to_world: Vector3
-var lin_vel_in_air_relative_to_cam: Vector3 # linear velocity in air relative to camera
+var lin_vel_in_air_relative_to_cam: Vector3 # Linear Velocity In Air Relative To Camera
 
 # Crouch
 var crouch_speed: float = Globals.normal_speed * 2.0 / 3.0
@@ -62,6 +63,7 @@ var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 @export var slope_ray_cast: RayCast3D
 @export var can_jump_timer: Timer
 @export var jumping_timer: Timer
+@export var reset_low_lin_vel_timer: Timer # Reset Low Linear Velocity Timer
 @export var grounded_area: Area3D
 @export var dont_uncrouch_area: Area3D
 @export var dont_uncrouch_area_coll_shape: CollisionShape3D # It has a sphere shape
@@ -81,6 +83,8 @@ func _ready() -> void:
 	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
+	reset_low_lin_vel_timer.wait_time = RESET_L_L_V_TIMER_SECONDS
+	reset_low_lin_vel_timer.start()
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 2) - player_coll_shape.shape.radius, 0)
 	dont_uncrouch_area_coll_shape.shape.radius = player_coll_shape.shape.radius
@@ -112,7 +116,6 @@ func _physics_process(delta: float) -> void:
 	current_state = state_machine(current_state)
 	gravity_control()
 	move_speed_control()
-	low_velocity_reseter()
 
 func coyote_time(physics_process_delta: float) -> void:
 	if grounded:
@@ -211,19 +214,18 @@ func movement(physics_process_delta: float) -> void:
 			 || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2 && move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2)):
 				move_vector.z = 0 # Stop Z axis acceleration
 				move_vector.x = 0 # Stop X axis acceleration
-			else:
-				# If (player is moving forward and not (player has back velocity)) or (player is moving back and not (player has forward velocity))
-				if (move_vector.z <= -MIN && !(lin_vel_in_air_relative_to_cam.z >= MIN)) || (move_vector.z >= MIN && !(lin_vel_in_air_relative_to_cam.z <= -MIN)):
-					if lin_vel_in_air_relative_to_cam.x > move_speed:
-						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
-					elif lin_vel_in_air_relative_to_cam.x < -move_speed:
-						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
-				# Else if (player is moving right and not (player has left velocity)) || (player is moving left and not (player has right velocity))
-				elif (move_vector.x >= MIN && !(lin_vel_in_air_relative_to_cam.x <= -MIN)) || (move_vector.x <= -MIN && !(lin_vel_in_air_relative_to_cam.x >= MIN)):
-					if lin_vel_in_air_relative_to_cam.z < -move_speed:
-						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
-					elif lin_vel_in_air_relative_to_cam.z > move_speed:
-						apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
+			# Else if (player is moving forward and not (player has back velocity)) or (player is moving back and not (player has forward velocity))
+			elif (move_vector.z <= -MIN && !(lin_vel_in_air_relative_to_cam.z >= MIN)) || (move_vector.z >= MIN && !(lin_vel_in_air_relative_to_cam.z <= -MIN)):
+				if lin_vel_in_air_relative_to_cam.x > move_speed:
+					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
+				elif lin_vel_in_air_relative_to_cam.x < -move_speed:
+					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
+			# Else if (player is moving right and not (player has left velocity)) || (player is moving left and not (player has right velocity))
+			elif (move_vector.x >= MIN && !(lin_vel_in_air_relative_to_cam.x <= -MIN)) || (move_vector.x <= -MIN && !(lin_vel_in_air_relative_to_cam.x >= MIN)):
+				if lin_vel_in_air_relative_to_cam.z < -move_speed:
+					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
+				elif lin_vel_in_air_relative_to_cam.z > move_speed:
+					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
 
 		move_vector_relative_to_world = rotate_vector_around_y_axis(move_vector, deg_to_rad(y_rot_deg))
 
@@ -298,7 +300,7 @@ func state_machine(state: States) -> States:
 		else:
 			return States.WALKING
 	else:
-		return state
+		return States.IDLE
 
 # Return the player speed at XZ plane
 func get_speed() -> float:
@@ -325,12 +327,7 @@ func move_speed_control() -> void:
 		_:
 			move_speed = Globals.normal_speed
 
-func low_velocity_reseter() -> void:
-	if abs(linear_velocity.z) <= MIN:
-		linear_velocity.z = 0
-
-	if abs(linear_velocity.x) <= MIN:
-		linear_velocity.x = 0
-
-	if abs(linear_velocity.y) <= MIN:
-		linear_velocity.y = 0
+# On Reset Low Linear Velocity Timer Timeout
+func _on_reset_l_l_v_timer_timeout() -> void:
+	if linear_velocity.length() <= MIN:
+		linear_velocity = Vector3.ZERO
