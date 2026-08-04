@@ -45,6 +45,7 @@ var current_state: States
 var touching: bool
 
 # Ground Detection
+const GROUNDED_AREA_RADIUS: float = 0.3
 var grounded: bool
 
 # Bump Detection
@@ -55,7 +56,7 @@ var y_rot_deg: float # This variable is assigned by the player_and_camera script
 
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.5 # Don't make it smaller than 0.9
-const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # Don't make it bigger than 0.5 because if you do, you might see a visual bug
+const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # Don't make it bigger than 0.5 because if you do, you might see a visual bug when crouching
 var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 
 # @export Variables
@@ -65,6 +66,7 @@ var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 @export var jumping_timer: Timer
 @export var reset_low_lin_vel_timer: Timer # Reset Low Linear Velocity Timer
 @export var grounded_area: Area3D
+@export var grounded_area_coll_shape: CollisionShape3D # It has a sphere shape
 @export var dont_uncrouch_area: Area3D
 @export var dont_uncrouch_area_coll_shape: CollisionShape3D # It has a sphere shape
 @export var player_coll_shape: CollisionShape3D # It has a capsule shape
@@ -80,12 +82,14 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 8
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
-	slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
+	slope_ray_cast.position = Vector3(0, (-PLAYER_HEIGHT / 2) + 0.05, 0)
+	slope_ray_cast.target_position = Vector3(0, (-GROUNDED_AREA_RADIUS * 2) - 0.05, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
 	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
 	reset_low_lin_vel_timer.wait_time = RESET_L_L_V_TIMER_SECONDS
 	reset_low_lin_vel_timer.start()
 	grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
+	grounded_area_coll_shape.shape.radius = GROUNDED_AREA_RADIUS
 	dont_uncrouch_area.position = Vector3(0, (PLAYER_HEIGHT / 2) - player_coll_shape.shape.radius, 0)
 	dont_uncrouch_area_coll_shape.shape.radius = player_coll_shape.shape.radius
 	player_coll_shape.shape.height = PLAYER_HEIGHT
@@ -134,16 +138,12 @@ func jump() -> void:
 		jumping_timer.start()
 
 func _on_can_jump_timer_timeout() -> void:
-	# Reset can_jump and reset the timer
-	can_jump = true
 	can_jump_timer.stop()
-	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
+	can_jump = true # Reset can_jump
 
 func _on_jumping_timer_timeout() -> void:
-	# Reset jumping and reset the timer
-	jumping = false
 	jumping_timer.stop()
-	jumping_timer.wait_time = JUMPING_TIMER_SECONDS
+	jumping = false # Reset jumping
 
 func crouch() -> void:
 	if jumping:
@@ -151,7 +151,7 @@ func crouch() -> void:
 
 	if crouch_input && !crouching:
 		camera_position.position = Vector3(0, (crouch_height / 2) - 0.25, 0)
-		slope_ray_cast.position = Vector3(0, -crouch_height / 2, 0)
+		slope_ray_cast.position = Vector3(0, (-crouch_height / 2) + 0.05, 0)
 		grounded_area.position = Vector3(0, -crouch_height / 2, 0)
 		player_coll_shape.shape.height = crouch_height
 		player_mesh_inst.mesh.height = crouch_height
@@ -168,7 +168,7 @@ func crouch() -> void:
 			if grounded:
 				position.y += CROUCH_HEIGHT_DIFFERENCE / 2
 
-			slope_ray_cast.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
+			slope_ray_cast.position = Vector3(0, (-PLAYER_HEIGHT / 2) + 0.05, 0)
 			grounded_area.position = Vector3(0, -PLAYER_HEIGHT / 2, 0)
 			player_coll_shape.shape.height = PLAYER_HEIGHT
 			player_mesh_inst.mesh.height = PLAYER_HEIGHT
@@ -307,7 +307,7 @@ func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
 func gravity_control() -> void:
-	if touching && grounded && on_slope && current_state != States.SLIDING:
+	if on_slope && current_state != States.SLIDING && touching && grounded:
 		if linear_velocity.y >= MIN:
 			gravity_scale = 1
 			apply_force((gravity_amount - 10) * mass * Vector3.UP)

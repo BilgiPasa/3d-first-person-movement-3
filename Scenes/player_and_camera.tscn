@@ -28,7 +28,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=1566701192]
 
-[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "reset_low_lin_vel_timer", "grounded_area", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
+[node name="Player" type="RigidBody3D" parent="." unique_id=1419588242 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "reset_low_lin_vel_timer", "grounded_area", "grounded_area_coll_shape", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
 collision_layer = 2
 physics_material_override = ExtResource("1_a5f1f")
 script = ExtResource("3_t5fc0")
@@ -38,6 +38,7 @@ can_jump_timer = NodePath("CanJumpTimer")
 jumping_timer = NodePath("JumpingTimer")
 reset_low_lin_vel_timer = NodePath("ResetLowLinVelTimer")
 grounded_area = NodePath("GroundedArea")
+grounded_area_coll_shape = NodePath("GroundedArea/CollisionShape3D")
 dont_uncrouch_area = NodePath("DontUncrouchArea")
 dont_uncrouch_area_coll_shape = NodePath("DontUncrouchArea/CollisionShape3D")
 player_coll_shape = NodePath("PlayerCollShape")
@@ -49,8 +50,8 @@ bump_area_coll_shape = NodePath("PlayerCollShape/BumpArea/CollisionShape3D")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="SlopeRayCast" type="RayCast3D" parent="Player" unique_id=811401043]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-target_position = Vector3(0, -0.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95, 0)
+target_position = Vector3(0, -0.65, 0)
 
 [node name="CanJumpTimer" type="Timer" parent="Player" unique_id=1899720305]
 
