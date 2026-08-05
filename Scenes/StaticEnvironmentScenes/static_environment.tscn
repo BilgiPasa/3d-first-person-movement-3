@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://2ipg0oj6jbv1"]
 
-[ext_resource type="ArrayOccluder3D" uid="uid://du8osdpwp5gl0" path="res://Scenes/EnvironmentScenes/environment.occ" id="1_8nqb5"]
-[ext_resource type="Texture2D" uid="uid://d03ws3dcm58v3" path="res://Materials/Sprites/DarkBlueWithCorners.png" id="1_g5ire"]
-[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_r42gm"]
-[ext_resource type="PackedScene" uid="uid://dfd80qt21v6d7" path="res://Scenes/EnvironmentScenes/medium_platform.tscn" id="3_0neh7"]
-[ext_resource type="PackedScene" uid="uid://s5psyjsom882" path="res://Scenes/EnvironmentScenes/small_platform.tscn" id="3_hdpwj"]
-[ext_resource type="PackedScene" uid="uid://8ckixlkujxa4" path="res://Scenes/EnvironmentScenes/large_platform.tscn" id="4_ihb6g"]
+[ext_resource type="ArrayOccluder3D" uid="uid://dq78qaq70kt43" path="res://Scenes/StaticEnvironmentScenes/static_environment.occ" id="1_jf7di"]
+[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_m1wx5"]
+[ext_resource type="Texture2D" uid="uid://d03ws3dcm58v3" path="res://Materials/Sprites/DarkBlueWithCorners.png" id="2_jf7di"]
+[ext_resource type="PackedScene" uid="uid://dfd80qt21v6d7" path="res://Scenes/StaticEnvironmentScenes/medium_platform.tscn" id="3_lbqpc"]
+[ext_resource type="PackedScene" uid="uid://8ckixlkujxa4" path="res://Scenes/StaticEnvironmentScenes/large_platform.tscn" id="4_cq8ci"]
+[ext_resource type="PackedScene" uid="uid://s5psyjsom882" path="res://Scenes/StaticEnvironmentScenes/small_platform.tscn" id="5_kog7v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhpl"]
-albedo_texture = ExtResource("1_g5ire")
+albedo_texture = ExtResource("2_jf7di")
 uv1_scale = Vector3(0.25, 0.25, 0.25)
 uv1_triplanar = true
 
@@ -49,14 +49,24 @@ size = Vector3(58, 0.1, 6)
 [sub_resource type="BoxShape3D" id="BoxShape3D_nic6v"]
 size = Vector3(58, 0.1, 6)
 
-[node name="Environment" type="Node3D" unique_id=2118310843]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lbqpc"]
+albedo_color = Color(0.29411766, 0.29411766, 0.29411766, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nic6v"]
+material = SubResource("StandardMaterial3D_lbqpc")
+size = Vector3(12, 8, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8gss0"]
+size = Vector3(12, 8, 0.5)
+
+[node name="StaticEnvironment" type="Node3D" unique_id=2118310843]
 
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=1481457809]
-occluder = ExtResource("1_8nqb5")
+occluder = ExtResource("1_jf7di")
 
 [node name="MainGround" type="StaticBody3D" parent="." unique_id=737079153]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainGround" unique_id=2055585675]
 mesh = SubResource("BoxMesh_r07tb")
@@ -66,7 +76,7 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Ramp1" type="StaticBody3D" parent="." unique_id=272420716]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 3.955, -18.975)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp1" unique_id=747312510]
 mesh = SubResource("BoxMesh_icmdk")
@@ -74,12 +84,12 @@ mesh = SubResource("BoxMesh_icmdk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp1" unique_id=1168270496]
 shape = SubResource("BoxShape3D_7lsjx")
 
-[node name="Ramp1MediumPlatf" parent="." unique_id=697687387 instance=ExtResource("3_0neh7")]
+[node name="Ramp1MediumPlatf" parent="." unique_id=697687387 instance=ExtResource("3_lbqpc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.945, -28.88)
 
 [node name="60DegreeRamp" type="StaticBody3D" parent="." unique_id=612098239]
 transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, -53.67, 7.395, 10)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="60DegreeRamp" unique_id=1619575586]
 mesh = SubResource("BoxMesh_wkhpl")
@@ -87,12 +97,12 @@ mesh = SubResource("BoxMesh_wkhpl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="60DegreeRamp" unique_id=387946555]
 shape = SubResource("BoxShape3D_icmdk")
 
-[node name="60DegRampLargePlatf" parent="." unique_id=1681733004 instance=ExtResource("4_ihb6g")]
+[node name="60DegRampLargePlatf" parent="." unique_id=1681733004 instance=ExtResource("4_cq8ci")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 10)
 
 [node name="45DegreeRamp" type="StaticBody3D" parent="." unique_id=1071888534]
 transform = Transform3D(0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0, 1, -50.525, 7.455, 35)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="45DegreeRamp" unique_id=584118885]
 mesh = SubResource("BoxMesh_7lsjx")
@@ -100,12 +110,12 @@ mesh = SubResource("BoxMesh_7lsjx")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="45DegreeRamp" unique_id=2056648244]
 shape = SubResource("BoxShape3D_wkhpl")
 
-[node name="45DegRampLargePlatf" parent="." unique_id=67593851 instance=ExtResource("4_ihb6g")]
+[node name="45DegRampLargePlatf" parent="." unique_id=67593851 instance=ExtResource("4_cq8ci")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 35)
 
 [node name="30DegreeRamp" type="StaticBody3D" parent="." unique_id=1147850264]
 transform = Transform3D(0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0, 0, 1, -45.035, 7.46, 60)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="30DegreeRamp" unique_id=1350056164]
 mesh = SubResource("BoxMesh_5s483")
@@ -113,12 +123,12 @@ mesh = SubResource("BoxMesh_5s483")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="30DegreeRamp" unique_id=700926588]
 shape = SubResource("BoxShape3D_r07tb")
 
-[node name="30DegRampLargePlatf" parent="." unique_id=1392086093 instance=ExtResource("4_ihb6g")]
+[node name="30DegRampLargePlatf" parent="." unique_id=1392086093 instance=ExtResource("4_cq8ci")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 60)
 
 [node name="15DegreeRamp" type="StaticBody3D" parent="." unique_id=555822390]
 transform = Transform3D(0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0, 0, 1, -30, 7.445, 85)
-physics_material_override = ExtResource("1_r42gm")
+physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="15DegreeRamp" unique_id=1348192670]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
@@ -128,8 +138,27 @@ mesh = SubResource("BoxMesh_8gss0")
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_nic6v")
 
-[node name="15DegRampLargePlatf" parent="." unique_id=1858488330 instance=ExtResource("4_ihb6g")]
+[node name="15DegRampLargePlatf" parent="." unique_id=1858488330 instance=ExtResource("4_cq8ci")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 85)
+
+[node name="InfoSign" type="StaticBody3D" parent="." unique_id=2082273330]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 50, 5, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InfoSign" unique_id=63317890]
+mesh = SubResource("BoxMesh_nic6v")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfoSign" unique_id=1467652238]
+shape = SubResource("BoxShape3D_8gss0")
+
+[node name="Label3D" type="Label3D" parent="InfoSign" unique_id=1140632119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.255)
+text = "Player Controls:
+Use WASD to move
+Press Space to jump
+Press Left Shift to crouch
+Press W and R to run
+Press C to camera zoom"
+font_size = 175
 
 [node name="AscendingSmallPlatforms" type="Node3D" parent="." unique_id=566787657]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.05, -14)
@@ -144,109 +173,109 @@ transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, 1, -
 text = "4 meters"
 font_size = 80
 
-[node name="SmallPlatform" parent="AscendingSmallPlatforms" unique_id=109542825 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform" parent="AscendingSmallPlatforms" unique_id=109542825 instance=ExtResource("5_kog7v")]
 
-[node name="SmallPlatform2" parent="AscendingSmallPlatforms" unique_id=1676548861 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform2" parent="AscendingSmallPlatforms" unique_id=1676548861 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.1, 0)
 
-[node name="SmallPlatform3" parent="AscendingSmallPlatforms" unique_id=1124474131 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform3" parent="AscendingSmallPlatforms" unique_id=1124474131 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.2, 0)
 
-[node name="SmallPlatform4" parent="AscendingSmallPlatforms" unique_id=2097360291 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform4" parent="AscendingSmallPlatforms" unique_id=2097360291 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.3, 0)
 
-[node name="SmallPlatform5" parent="AscendingSmallPlatforms" unique_id=1166683896 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform5" parent="AscendingSmallPlatforms" unique_id=1166683896 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.4, 0)
 
-[node name="SmallPlatform6" parent="AscendingSmallPlatforms" unique_id=605256625 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform6" parent="AscendingSmallPlatforms" unique_id=605256625 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 0)
 
-[node name="SmallPlatform7" parent="AscendingSmallPlatforms" unique_id=736670034 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform7" parent="AscendingSmallPlatforms" unique_id=736670034 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.6, 0)
 
-[node name="SmallPlatform8" parent="AscendingSmallPlatforms" unique_id=1843829175 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform8" parent="AscendingSmallPlatforms" unique_id=1843829175 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0.7, 0)
 
-[node name="SmallPlatform9" parent="AscendingSmallPlatforms" unique_id=379593047 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform9" parent="AscendingSmallPlatforms" unique_id=379593047 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0.8, 0)
 
-[node name="SmallPlatform10" parent="AscendingSmallPlatforms" unique_id=538975180 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform10" parent="AscendingSmallPlatforms" unique_id=538975180 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0.9, 0)
 
-[node name="SmallPlatform11" parent="AscendingSmallPlatforms" unique_id=1088133508 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform11" parent="AscendingSmallPlatforms" unique_id=1088133508 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 1, 0)
 
-[node name="SmallPlatform12" parent="AscendingSmallPlatforms" unique_id=366194665 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform12" parent="AscendingSmallPlatforms" unique_id=366194665 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 1.1, 0)
 
-[node name="SmallPlatform13" parent="AscendingSmallPlatforms" unique_id=1012911633 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform13" parent="AscendingSmallPlatforms" unique_id=1012911633 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 1.2, 0)
 
-[node name="SmallPlatform14" parent="AscendingSmallPlatforms" unique_id=244918340 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform14" parent="AscendingSmallPlatforms" unique_id=244918340 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52, 1.3, 0)
 
-[node name="SmallPlatform15" parent="AscendingSmallPlatforms" unique_id=77186398 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform15" parent="AscendingSmallPlatforms" unique_id=77186398 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 1.4, 0)
 
-[node name="SmallPlatform16" parent="AscendingSmallPlatforms" unique_id=456762179 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform16" parent="AscendingSmallPlatforms" unique_id=456762179 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 1.5, 0)
 
-[node name="SmallPlatform17" parent="AscendingSmallPlatforms" unique_id=1095612522 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform17" parent="AscendingSmallPlatforms" unique_id=1095612522 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 1.6, 0)
 
-[node name="SmallPlatform18" parent="AscendingSmallPlatforms" unique_id=1868724448 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform18" parent="AscendingSmallPlatforms" unique_id=1868724448 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68, 1.7, 0)
 
-[node name="SmallPlatform19" parent="AscendingSmallPlatforms" unique_id=1393824182 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform19" parent="AscendingSmallPlatforms" unique_id=1393824182 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72, 1.8, 0)
 
-[node name="SmallPlatform20" parent="AscendingSmallPlatforms" unique_id=971617299 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform20" parent="AscendingSmallPlatforms" unique_id=971617299 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76, 1.9, 0)
 
-[node name="SmallPlatform21" parent="AscendingSmallPlatforms" unique_id=1101004471 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform21" parent="AscendingSmallPlatforms" unique_id=1101004471 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 2, 0)
 
-[node name="SmallPlatform22" parent="AscendingSmallPlatforms" unique_id=1104718881 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform22" parent="AscendingSmallPlatforms" unique_id=1104718881 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 2.1, 0)
 
-[node name="SmallPlatform23" parent="AscendingSmallPlatforms" unique_id=1603235134 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform23" parent="AscendingSmallPlatforms" unique_id=1603235134 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88, 2.2, 0)
 
-[node name="SmallPlatform24" parent="AscendingSmallPlatforms" unique_id=821332341 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform24" parent="AscendingSmallPlatforms" unique_id=821332341 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92, 2.3, 0)
 
-[node name="SmallPlatform25" parent="AscendingSmallPlatforms" unique_id=1245948688 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform25" parent="AscendingSmallPlatforms" unique_id=1245948688 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96, 2.4, 0)
 
-[node name="SmallPlatform26" parent="AscendingSmallPlatforms" unique_id=592283082 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform26" parent="AscendingSmallPlatforms" unique_id=592283082 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 2.5, 0)
 
-[node name="SmallPlatform27" parent="AscendingSmallPlatforms" unique_id=950737617 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform27" parent="AscendingSmallPlatforms" unique_id=950737617 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 104, 2.6, 0)
 
-[node name="SmallPlatform28" parent="AscendingSmallPlatforms" unique_id=1664722500 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform28" parent="AscendingSmallPlatforms" unique_id=1664722500 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108, 2.7, 0)
 
-[node name="SmallPlatform29" parent="AscendingSmallPlatforms" unique_id=209458538 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform29" parent="AscendingSmallPlatforms" unique_id=209458538 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 112, 2.8, 0)
 
-[node name="SmallPlatform30" parent="AscendingSmallPlatforms" unique_id=1217156887 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform30" parent="AscendingSmallPlatforms" unique_id=1217156887 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116, 2.9, 0)
 
-[node name="SmallPlatform31" parent="AscendingSmallPlatforms" unique_id=916790777 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform31" parent="AscendingSmallPlatforms" unique_id=916790777 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 3, 0)
 
-[node name="SmallPlatform32" parent="AscendingSmallPlatforms" unique_id=245263113 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform32" parent="AscendingSmallPlatforms" unique_id=245263113 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 124, 3.1, 0)
 
-[node name="SmallPlatform33" parent="AscendingSmallPlatforms" unique_id=284755793 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform33" parent="AscendingSmallPlatforms" unique_id=284755793 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 3.2, 0)
 
-[node name="SmallPlatform34" parent="AscendingSmallPlatforms" unique_id=439786638 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform34" parent="AscendingSmallPlatforms" unique_id=439786638 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132, 3.3, 0)
 
-[node name="SmallPlatform35" parent="AscendingSmallPlatforms" unique_id=723546912 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform35" parent="AscendingSmallPlatforms" unique_id=723546912 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 136, 3.4, 0)
 
-[node name="SmallPlatform36" parent="AscendingSmallPlatforms" unique_id=1143762731 instance=ExtResource("3_hdpwj")]
+[node name="SmallPlatform36" parent="AscendingSmallPlatforms" unique_id=1143762731 instance=ExtResource("5_kog7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 140, 3.5, 0)

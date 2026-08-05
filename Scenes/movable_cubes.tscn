@@ -1,0 +1,201 @@
+[gd_scene format=3 uid="uid://b5aoq6im5wkcb"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://dkur8tg6eel05" path="res://Materials/little_friction_no_bounciness.tres" id="1_18vbn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_r07tb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5s483"]
+
+[node name="MovableCubes" type="Node3D" unique_id=1881250913]
+
+[node name="Cube" type="RigidBody3D" parent="." unique_id=2059291752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube" unique_id=1884454268]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube" unique_id=1879412268]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube2" type="RigidBody3D" parent="." unique_id=1960950292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube2" unique_id=1240145634]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube2" unique_id=2005487629]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube3" type="RigidBody3D" parent="." unique_id=1070509630]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube3" unique_id=1090204277]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube3" unique_id=1116382120]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube4" type="RigidBody3D" parent="." unique_id=1678166293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube4" unique_id=1349374439]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube4" unique_id=1089242595]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube5" type="RigidBody3D" parent="." unique_id=1587983395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube5" unique_id=2003426197]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube5" unique_id=942740791]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube6" type="RigidBody3D" parent="." unique_id=1526654025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube6" unique_id=1692089056]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube6" unique_id=354312380]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube7" type="RigidBody3D" parent="." unique_id=1525259255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube7" unique_id=1709579832]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube7" unique_id=1212991314]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube8" type="RigidBody3D" parent="." unique_id=1590036869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube8" unique_id=957616045]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube8" unique_id=1141364574]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube9" type="RigidBody3D" parent="." unique_id=1468137311]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube9" unique_id=581506161]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube9" unique_id=781359271]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube10" type="RigidBody3D" parent="." unique_id=164629715]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube10" unique_id=220761948]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube10" unique_id=445346723]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube11" type="RigidBody3D" parent="." unique_id=1952386479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube11" unique_id=354255896]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube11" unique_id=458044407]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube12" type="RigidBody3D" parent="." unique_id=136124881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube12" unique_id=1615229910]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube12" unique_id=353169508]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube13" type="RigidBody3D" parent="." unique_id=1790189366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube13" unique_id=1037040438]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube13" unique_id=1773127126]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube14" type="RigidBody3D" parent="." unique_id=1847990566]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube14" unique_id=574736178]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube14" unique_id=1615819015]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube15" type="RigidBody3D" parent="." unique_id=501847050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 28.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube15" unique_id=1577339714]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube15" unique_id=116600376]
+shape = SubResource("BoxShape3D_5s483")
+
+[node name="Cube16" type="RigidBody3D" parent="." unique_id=1624720599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30.5, 0)
+collision_mask = 3
+physics_material_override = ExtResource("1_18vbn")
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube16" unique_id=733061837]
+mesh = SubResource("BoxMesh_r07tb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube16" unique_id=1382887446]
+shape = SubResource("BoxShape3D_5s483")
