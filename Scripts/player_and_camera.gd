@@ -11,8 +11,8 @@ const ZOOMED_CAM_ROT_MULT: float = 0.5
 var current_cam_rot_mult: float
 
 # Camera FOV
-var normal_fov_from_globals: int = Globals.normal_fov
-var sprint_fov_change_from_globals: int = Globals.sprint_fov_change
+var normal_fov_temp: int # Globals.settings_save.normal_fov is assigned to this variable for performance
+var sprint_fov_change_temp: int # Globals.settings_save.sprint_fov_change_temp is assigned to this variable for performance
 var sprint_fov: int
 var zoom_fov: float
 var zoom_sprint_fov: float
@@ -30,19 +30,19 @@ var zoom_input: bool
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	current_cam_rot_mult = NORMAL_CAM_ROT_MULT
-	camera.fov = normal_fov_from_globals
+	camera.fov = Globals.settings_save.normal_fov
 
 # * Get camera rotation input
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		y_rot_deg -= event.relative.x * Globals.mouse_sensitivity * current_cam_rot_mult * 0.001
-		x_rot_deg -= event.relative.y * Globals.mouse_sensitivity * current_cam_rot_mult * 0.001
+		y_rot_deg -= event.relative.x * Globals.settings_save.mouse_sensitivity * current_cam_rot_mult * 0.001
+		x_rot_deg -= event.relative.y * Globals.settings_save.mouse_sensitivity * current_cam_rot_mult * 0.001
 		x_rot_deg = clamp(x_rot_deg, -90, 90)
 
 func _process(delta: float) -> void:
 	camera_position_and_rotation()
-	normal_fov_from_globals = Globals.normal_fov
-	sprint_fov_change_from_globals = Globals.sprint_fov_change
+	normal_fov_temp = Globals.settings_save.normal_fov # Assign to a variable for performance
+	sprint_fov_change_temp = Globals.settings_save.sprint_fov_change # Assign to a variable for performance
 	fov_change(delta)
 
 func camera_position_and_rotation() -> void:
@@ -56,13 +56,13 @@ func fov_change(process_delta: float) -> void:
 	if !zoom_input:
 		current_cam_rot_mult = NORMAL_CAM_ROT_MULT
 
-		if !(sprint_fov_change_from_globals > 0 && (player.current_state == player.States.RUNNING || (get_player_speed() > player.run_speed && player.current_state == player.States.SLIDING))):
-			if camera.fov > normal_fov_from_globals - 0.01 && camera.fov < normal_fov_from_globals + 0.01:
-				camera.fov = normal_fov_from_globals
+		if !(sprint_fov_change_temp > 0 && (player.current_state == player.States.RUNNING || (get_player_speed() > player.run_speed && player.current_state == player.States.SLIDING))):
+			if camera.fov > normal_fov_temp - 0.01 && camera.fov < normal_fov_temp + 0.01:
+				camera.fov = normal_fov_temp
 			else:
-				camera.fov = lerpf(camera.fov, normal_fov_from_globals, ZOOMING_SPEED * process_delta)
+				camera.fov = lerpf(camera.fov, normal_fov_temp, ZOOMING_SPEED * process_delta)
 		else:
-			sprint_fov = normal_fov_from_globals + sprint_fov_change_from_globals
+			sprint_fov = normal_fov_temp + sprint_fov_change_temp
 
 			if camera.fov > sprint_fov - 0.01:
 				camera.fov = sprint_fov
@@ -71,15 +71,15 @@ func fov_change(process_delta: float) -> void:
 	else:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
-		if !(sprint_fov_change_from_globals > 0 && (player.current_state == player.States.RUNNING || (get_player_speed() > player.run_speed && player.current_state == player.States.SLIDING))):
-			zoom_fov = normal_fov_from_globals / 5.0 # To make floating point division, 5.0 is written here instead of 5
+		if !(sprint_fov_change_temp > 0 && (player.current_state == player.States.RUNNING || (get_player_speed() > player.run_speed && player.current_state == player.States.SLIDING))):
+			zoom_fov = normal_fov_temp / 5.0 # To make floating point division, 5.0 is written here instead of 5
 
 			if camera.fov < zoom_fov + 0.01:
 				camera.fov = zoom_fov
 			else:
 				camera.fov = lerpf(camera.fov, zoom_fov, ZOOMING_SPEED * process_delta)
 		else:
-			zoom_sprint_fov = (normal_fov_from_globals + sprint_fov_change_from_globals) / 5.0 # To make floating point division, 5.0 is written here instead of 5
+			zoom_sprint_fov = (normal_fov_temp + sprint_fov_change_temp) / 5.0 # To make floating point division, 5.0 is written here instead of 5
 
 			if camera.fov > zoom_sprint_fov - 0.01 && camera.fov < zoom_sprint_fov + 0.01:
 				camera.fov = zoom_sprint_fov

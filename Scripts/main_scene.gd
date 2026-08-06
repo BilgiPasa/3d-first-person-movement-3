@@ -1,5 +1,10 @@
 extends Node3D
 
+# Timer Seconds Constants
+const MOVE_UP_PLAYER_TIMER_SECONDS: int = 2
+const FPS_LABEL_TIMER_SECONDS: float = 0.5
+
+# @export Variables
 @export var player_and_camera: PlayerAndCamera
 @export var move_up_player_timer: Timer
 @export var fps_label_timer: Timer
@@ -9,8 +14,6 @@ extends Node3D
 @export var settings_menu: Control
 @export var player_tweaks_menu: Control
 @export var fps_label_initial_position: Vector2
-const MOVE_UP_PLAYER_TIMER_SECONDS: int = 2
-const FPS_LABEL_TIMER_SECONDS: float = 0.5
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -71,6 +74,7 @@ func open_settings() -> void:
 	settings_menu.show()
 
 func close_settings() -> void:
+	Globals.settings_save.save()
 	pause_menu.process_mode = Node.PROCESS_MODE_INHERIT
 	pause_menu.show()
 	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
@@ -83,6 +87,7 @@ func open_player_tweaks() -> void:
 	player_tweaks_menu.show()
 
 func close_player_tweaks() -> void:
+	Globals.player_tweaks_save.save()
 	settings_menu.process_mode = Node.PROCESS_MODE_INHERIT
 	settings_menu.show()
 	player_tweaks_menu.hide()

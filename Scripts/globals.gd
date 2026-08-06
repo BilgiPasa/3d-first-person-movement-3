@@ -1,17 +1,9 @@
 extends Node
 
-# PlayerAndCamera Camera FOV
-var normal_fov: int = Defaults.NORMAL_FOV
-var sprint_fov_change: int = Defaults.SPRINT_FOV_CHANGE
+# Save Variables
+var settings_save: SettingsSave
+var player_tweaks_save: PlayerTweaksSave
 
-# PlayerAndCamera Camera Rotation
-var mouse_sensitivity: int = Defaults.MOUSE_SENSITIVITY
-
-# Player Movement
-var normal_speed: int = Defaults.NORMAL_SPEED
-
-# Player Jump
-var jump_speed: int = Defaults.JUMP_SPEED
-
-# Max FPS Setting
-var max_fps_setting: int = Defaults.MAX_FPS_SETTING
+func _ready() -> void:
+	settings_save = SettingsSave.load_or_create()
+	player_tweaks_save = PlayerTweaksSave.load_or_create()
