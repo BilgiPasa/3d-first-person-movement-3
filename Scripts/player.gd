@@ -207,23 +207,34 @@ func movement(physics_process_delta: float) -> void:
 
 		# If player is faster than its movement speed
 		if get_speed() > move_speed:
-			# In 4 quadrants of Z and X axis, if player is moving diagonally and player is faster than half of its movement speed in both Z and X axis individually
-			if ((move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2 && move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2)
-			 || (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2 && move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2)
-			 || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2 && move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2)
-			 || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2 && move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2)):
+			# If (player is moving forward and player is faster than half of its movement speed in -Z) or (player is moving back and player is faster than half of its movement speed in Z)
+			if (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
 				move_vector.z = 0 # Stop Z axis acceleration
+
+				# If (player is moving right and player is faster than half of its movement speed in X) or (player is moving left and player is faster than half of its movement speed in -X)
+				if (move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2) || (move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2):
+					move_vector.x = 0 # Stop X axis acceleration
+			# Else if (player is moving right and player is faster than half of its movement speed in X) or (player is moving left and player is faster than half of its movement speed in -X)
+			elif (move_vector.x >= MIN && lin_vel_in_air_relative_to_cam.x > move_speed / 2) || (move_vector.x <= -MIN && lin_vel_in_air_relative_to_cam.x < -move_speed / 2):
 				move_vector.x = 0 # Stop X axis acceleration
-			# Else if (player is moving forward and not (player has back velocity)) or (player is moving back and not (player has forward velocity))
+
+				# If (player is moving forward and player is faster than half of its movement speed in -Z) or (player is moving back and player is faster than half of its movement speed in Z)
+				if (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
+					move_vector.z = 0 # Stop Z axis acceleration
+			# Else if (player is moving forward and not (player has Z velocity)) or (player is moving back and not (player has -Z velocity))
 			elif (move_vector.z <= -MIN && !(lin_vel_in_air_relative_to_cam.z >= MIN)) || (move_vector.z >= MIN && !(lin_vel_in_air_relative_to_cam.z <= -MIN)):
+				# If player is faster than its movement speed in X
 				if lin_vel_in_air_relative_to_cam.x > move_speed:
 					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.LEFT, deg_to_rad(y_rot_deg)))
+				# If player is faster than its movement speed in -X
 				elif lin_vel_in_air_relative_to_cam.x < -move_speed:
 					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.RIGHT, deg_to_rad(y_rot_deg)))
-			# Else if (player is moving right and not (player has left velocity)) || (player is moving left and not (player has right velocity))
+			# Else if (player is moving right and not (player has -X velocity)) || (player is moving left and not (player has X velocity))
 			elif (move_vector.x >= MIN && !(lin_vel_in_air_relative_to_cam.x <= -MIN)) || (move_vector.x <= -MIN && !(lin_vel_in_air_relative_to_cam.x >= MIN)):
+				# If player is faster than its movement speed in -Z
 				if lin_vel_in_air_relative_to_cam.z < -move_speed:
 					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.BACK, deg_to_rad(y_rot_deg)))
+				# If player is faster than its movement speed in Z
 				elif lin_vel_in_air_relative_to_cam.z > move_speed:
 					apply_force((move_speed / 2) * AIR_MOVE_MULT * physics_process_delta * mass * rotate_vector_around_y_axis(Vector3.FORWARD, deg_to_rad(y_rot_deg)))
 
