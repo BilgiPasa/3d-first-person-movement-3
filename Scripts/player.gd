@@ -8,7 +8,7 @@ const GROUND_LINEAR_DAMP: float = 12.4
 const AIR_LINEAR_DAMP: float = 0.001
 const MIN: float = 0.1
 const RESET_L_L_V_TIMER_SECONDS: float = 0.5 # Reset Low Linear Velocity Timer Seconds
-var run_speed: float
+var run_speed: float # Assigned at "move_speed_control" function
 var gravity_amount: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float
 var run_input: bool
@@ -20,8 +20,8 @@ var move_vector_relative_to_world: Vector3
 var lin_vel_in_air_relative_to_cam: Vector3 # Linear Velocity In Air Relative To Camera
 
 # Crouch
-var crouch_speed: float
-var min_sliding_speed: float = run_speed
+var crouch_speed: float # Assigned at "move_speed_control" function
+var min_sliding_speed: float # Assigned at "move_speed_control" function
 var crouching: bool = false
 var crouch_input: bool
 var dont_uncrouch: bool
@@ -133,7 +133,7 @@ func jump() -> void:
 	if jump_input && can_jump && !jumping && ((touching && grounded) || (!grounded && coyote_time_counter > 0)):
 		can_jump = false
 		jumping = true
-		linear_velocity.y = Globals.player_tweaks_save.jump_speed
+		linear_velocity.y = Globals.jump_speed
 		can_jump_timer.start()
 		jumping_timer.start()
 
@@ -327,16 +327,22 @@ func gravity_control() -> void:
 	else:
 		gravity_scale = 1
 
+# I assigned the crouch_speed and the run_speed here because I can change the normal_speed in PlayerTweaksMenu
 func move_speed_control() -> void:
 	match current_state:
-		States.CROUCHING, States.CROUCH_WALKING, States.SLIDING:
-			crouch_speed = Globals.player_tweaks_save.normal_speed * 2.0 / 3.0
+		States.CROUCHING, States.CROUCH_WALKING:
+			crouch_speed = Globals.normal_speed * 2.0 / 3.0
 			move_speed = crouch_speed
 		States.RUNNING:
-			run_speed = Globals.player_tweaks_save.normal_speed * 4.0 / 3.0
+			run_speed = Globals.normal_speed * 4.0 / 3.0
 			move_speed = run_speed
+		States.SLIDING:
+			run_speed = Globals.normal_speed * 4.0 / 3.0
+			min_sliding_speed = run_speed
+			crouch_speed = Globals.normal_speed * 2.0 / 3.0
+			move_speed = crouch_speed
 		_:
-			move_speed = Globals.player_tweaks_save.normal_speed
+			move_speed = Globals.normal_speed
 
 # On Reset Low Linear Velocity Timer Timeout
 func _on_reset_l_l_v_timer_timeout() -> void:

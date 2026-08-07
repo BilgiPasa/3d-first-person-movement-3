@@ -11,9 +11,9 @@ signal go_back
 
 func _ready() -> void:
 	# Initialize the PlayerTweaksMenu UI
-	normal_speed_slider.value = Globals.player_tweaks_save.normal_speed
+	normal_speed_slider.value = Globals.normal_speed
 	update_about_normal_speed(int(normal_speed_slider.value))
-	jump_speed_slider.value = Globals.player_tweaks_save.jump_speed
+	jump_speed_slider.value = Globals.jump_speed
 	update_about_jump_speed(int(jump_speed_slider.value))
 
 func _on_visibility_changed() -> void:
@@ -37,9 +37,9 @@ func _on_go_back_button_pressed() -> void:
 	go_back.emit()
 
 func update_about_normal_speed(value: int) -> void:
-	Globals.player_tweaks_save.normal_speed = value
+	Globals.normal_speed = value
 	normal_speed_label.text = "Normal Speed: %d" % value
 
 func update_about_jump_speed(value: int) -> void:
-	Globals.player_tweaks_save.jump_speed = value
+	Globals.jump_speed = value
 	jump_speed_label.text = "Jump Speed: %d" % value

@@ -18,8 +18,6 @@ const FPS_LABEL_TIMER_SECONDS: float = 0.5
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	speed_label.process_mode = Node.PROCESS_MODE_INHERIT
-	speed_label.show()
 	pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	pause_menu.hide()
 	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
@@ -30,9 +28,10 @@ func _ready() -> void:
 	player_and_camera.player.position = Vector3(0, 0, 0) # position = position relative to the parent
 	move_up_player_timer.wait_time = MOVE_UP_PLAYER_TIMER_SECONDS
 	move_up_player_timer.start()
-	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 	fps_label_timer.wait_time = FPS_LABEL_TIMER_SECONDS
 	fps_label_timer.start()
+	speed_label.text = "Speed: %f" % player_and_camera.get_player_speed()
+	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed

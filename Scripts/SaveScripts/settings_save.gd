@@ -12,12 +12,18 @@ extends Resource
 @export var max_fps_setting: int = Defaults.MAX_FPS_SETTING
 
 # Labels' Visibility Settings
-var speed_label_visible: bool = true
-var fps_label_visible: bool = true
+@export var speed_label_visible: bool = Defaults.SPEED_LABEL_VISIBLE
+@export var fps_label_visible: bool = Defaults.FPS_LABEL_VISIBLE
 
-const SAVE_PATH: String = "user://settings_save.tres"
+const SAVE_PATH: String = "user://settings_save.tres" # I'm using .tres because I want to make it easily modifiable.
 
 func save() -> void:
+	normal_fov = Globals.normal_fov
+	sprint_fov_change = Globals.sprint_fov_change
+	mouse_sensitivity = Globals.mouse_sensitivity
+	max_fps_setting = Globals.max_fps_setting
+	speed_label_visible = Globals.speed_label_visible
+	fps_label_visible = Globals.fps_label_visible
 	ResourceSaver.save(self, SAVE_PATH)
 
 static func load_or_create() -> SettingsSave:

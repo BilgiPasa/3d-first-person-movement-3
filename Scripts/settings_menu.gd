@@ -22,23 +22,23 @@ signal go_back
 
 func _ready() -> void:
 	# Initialize the SettingsMenu UI
-	fov_slider.value = Globals.settings_save.normal_fov
+	fov_slider.value = Globals.normal_fov
 	update_about_fov(int(fov_slider.value))
-	max_fps_slider.value = Globals.settings_save.max_fps_setting
+	max_fps_slider.value = Globals.max_fps_setting
 	update_about_max_fps(int(max_fps_slider.value))
-	mouse_sensitivity_slider.value = Globals.settings_save.mouse_sensitivity
+	mouse_sensitivity_slider.value = Globals.mouse_sensitivity
 	update_about_mouse_sensitivity(int(mouse_sensitivity_slider.value))
-	sprint_fov_change_slider.value = Globals.settings_save.sprint_fov_change
+	sprint_fov_change_slider.value = Globals.sprint_fov_change
 	update_about_sprint_fov_change(int(sprint_fov_change_slider.value))
 
-	if !Globals.settings_save.speed_label_visible:
+	if !Globals.speed_label_visible:
 		hide_speed_label.emit()
 		speed_label_on_off_button.text = "Show Speed Label"
 	else:
 		show_speed_label.emit()
 		speed_label_on_off_button.text = "Hide Speed Label"
 
-	if !Globals.settings_save.fps_label_visible:
+	if !Globals.fps_label_visible:
 		hide_fps_label.emit()
 		fps_label_on_off_button.text = "Show FPS Label"
 	else:
@@ -62,22 +62,22 @@ func _on_s_fov_c_sldr_value_changed(value: float) -> void:
 	update_about_sprint_fov_change(int(value))
 
 func _on_spd_lbl_on_off_btn_pressed() -> void:
-	if Globals.settings_save.speed_label_visible:
-		Globals.settings_save.speed_label_visible = false
+	if Globals.speed_label_visible:
+		Globals.speed_label_visible = false
 		hide_speed_label.emit()
 		speed_label_on_off_button.text = "Show Speed Label"
 	else:
-		Globals.settings_save.speed_label_visible = true
+		Globals.speed_label_visible = true
 		show_speed_label.emit()
 		speed_label_on_off_button.text = "Hide Speed Label"
 
 func _on_fps_lbl_on_off_btn_pressed() -> void:
-	if Globals.settings_save.fps_label_visible:
-		Globals.settings_save.fps_label_visible = false
+	if Globals.fps_label_visible:
+		Globals.fps_label_visible = false
 		hide_fps_label.emit()
 		fps_label_on_off_button.text = "Show FPS Label"
 	else:
-		Globals.settings_save.fps_label_visible = true
+		Globals.fps_label_visible = true
 		show_fps_label.emit()
 		fps_label_on_off_button.text = "Hide FPS Label"
 
@@ -96,20 +96,20 @@ func _on_reset_settings_btn_pressed() -> void:
 	update_about_sprint_fov_change(int(sprint_fov_change_slider.value))
 
 	if !Defaults.SPEED_LABEL_VISIBLE:
-		Globals.settings_save.speed_label_visible = false
+		Globals.speed_label_visible = false
 		hide_speed_label.emit()
 		speed_label_on_off_button.text = "Show Speed Label"
 	else:
-		Globals.settings_save.speed_label_visible = true
+		Globals.speed_label_visible = true
 		show_speed_label.emit()
 		speed_label_on_off_button.text = "Hide Speed Label"
 
 	if !Defaults.FPS_LABEL_VISIBLE:
-		Globals.settings_save.fps_label_visible = false
+		Globals.fps_label_visible = false
 		hide_fps_label.emit()
 		fps_label_on_off_button.text = "Show FPS Label"
 	else:
-		Globals.settings_save.fps_label_visible = true
+		Globals.fps_label_visible = true
 		show_fps_label.emit()
 		fps_label_on_off_button.text = "Hide FPS Label"
 
@@ -117,7 +117,7 @@ func _on_go_back_button_pressed() -> void:
 	go_back.emit()
 
 func update_about_fov(value: int) -> void:
-	Globals.settings_save.normal_fov = value
+	Globals.normal_fov = value
 
 	match value:
 		90:
@@ -130,7 +130,7 @@ func update_about_fov(value: int) -> void:
 			fov_label.text = "FOV: %d" % value
 
 func update_about_max_fps(value: int) -> void:
-	Globals.settings_save.max_fps_setting = value
+	Globals.max_fps_setting = value
 
 	match value:
 		8:
@@ -171,7 +171,7 @@ func update_about_max_fps(value: int) -> void:
 			max_fps_label.text = "Max FPS: 60"
 
 func update_about_mouse_sensitivity(value: int) -> void:
-	Globals.settings_save.mouse_sensitivity = value
+	Globals.mouse_sensitivity = value
 
 	match value:
 		100:
@@ -184,7 +184,7 @@ func update_about_mouse_sensitivity(value: int) -> void:
 			mouse_sensitivity_label.text = "Mouse Sensitivity: %d" % value
 
 func update_about_sprint_fov_change(value: int) -> void:
-	Globals.settings_save.sprint_fov_change = value
+	Globals.sprint_fov_change = value
 
 	match value:
 		0:
