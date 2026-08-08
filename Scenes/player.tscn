@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://bdlpo2pklxjvt"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_cvnsp"]
+[ext_resource type="Script" uid="uid://44jn8pyrael2" path="res://Scripts/player.gd" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://cyxipifmrp3tl" path="res://Scripts/camera_holder.gd" id="3_6t5aa"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_f60y1"]
+radius = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v0iea"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6t5aa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vgqql"]
+size = Vector3(0.6, 1.1, 0.1)
+
+[node name="Player" type="RigidBody3D" unique_id=529495680 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "reset_low_lin_vel_timer", "grounded_area", "grounded_area_coll_shape", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
+collision_layer = 2
+physics_material_override = ExtResource("1_cvnsp")
+script = ExtResource("1_v0iea")
+camera_position = NodePath("CameraPosition")
+slope_ray_cast = NodePath("SlopeRayCast")
+can_jump_timer = NodePath("CanJumpTimer")
+jumping_timer = NodePath("JumpingTimer")
+reset_low_lin_vel_timer = NodePath("ResetLowLinVelTimer")
+grounded_area = NodePath("GroundedArea")
+grounded_area_coll_shape = NodePath("GroundedArea/GroundedAreaCollShape")
+dont_uncrouch_area = NodePath("DontUncrouchArea")
+dont_uncrouch_area_coll_shape = NodePath("DontUncrouchArea/DontUncrouchAreaCollShape")
+player_coll_shape = NodePath("PlayerCollShape")
+player_mesh_inst = NodePath("PlayerCollShape/PlayerMeshInst")
+bump_area = NodePath("PlayerCollShape/BumpArea")
+bump_area_coll_shape = NodePath("PlayerCollShape/BumpArea/BumpAreaCollShape")
+
+[node name="CameraPosition" type="Marker3D" parent="." unique_id=1451468109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="SlopeRayCast" type="RayCast3D" parent="." unique_id=1449402386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95, 0)
+target_position = Vector3(0, -0.65, 0)
+
+[node name="CanJumpTimer" type="Timer" parent="." unique_id=268437197]
+
+[node name="JumpingTimer" type="Timer" parent="." unique_id=2084946991]
+
+[node name="ResetLowLinVelTimer" type="Timer" parent="." unique_id=1197769260]
+
+[node name="CameraHolder" type="Node3D" parent="." unique_id=1730806531 node_paths=PackedStringArray("player", "camera_position", "camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+script = ExtResource("3_6t5aa")
+player = NodePath("..")
+camera_position = NodePath("../CameraPosition")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=50950328]
+
+[node name="GroundedArea" type="Area3D" parent="." unique_id=1517466738]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 2
+
+[node name="GroundedAreaCollShape" type="CollisionShape3D" parent="GroundedArea" unique_id=1585433910]
+shape = SubResource("SphereShape3D_f60y1")
+
+[node name="DontUncrouchArea" type="Area3D" parent="." unique_id=555852821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_layer = 2
+
+[node name="DontUncrouchAreaCollShape" type="CollisionShape3D" parent="DontUncrouchArea" unique_id=723529364]
+shape = SubResource("SphereShape3D_v0iea")
+
+[node name="PlayerCollShape" type="CollisionShape3D" parent="." unique_id=1885874328]
+shape = SubResource("CapsuleShape3D_cvnsp")
+
+[node name="PlayerMeshInst" type="MeshInstance3D" parent="PlayerCollShape" unique_id=34469465]
+layers = 2
+mesh = SubResource("CapsuleMesh_6t5aa")
+
+[node name="BumpArea" type="Area3D" parent="PlayerCollShape" unique_id=1322605312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.55)
+collision_layer = 2
+
+[node name="BumpAreaCollShape" type="CollisionShape3D" parent="PlayerCollShape/BumpArea" unique_id=10561971]
+shape = SubResource("BoxShape3D_vgqql")
+
+[connection signal="timeout" from="CanJumpTimer" to="." method="_on_can_jump_timer_timeout"]
+[connection signal="timeout" from="JumpingTimer" to="." method="_on_jumping_timer_timeout"]
+[connection signal="timeout" from="ResetLowLinVelTimer" to="." method="_on_reset_l_l_v_timer_timeout"]

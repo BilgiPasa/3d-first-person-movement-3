@@ -5,7 +5,7 @@ const MOVE_UP_PLAYER_TIMER_SECONDS: int = 2
 const FPS_LABEL_TIMER_SECONDS: float = 0.5
 
 # @export Variables
-@export var player_and_camera: PlayerAndCamera
+@export var player: Player
 @export var move_up_player_timer: Timer
 @export var fps_label_timer: Timer
 @export var speed_label: Label
@@ -24,13 +24,12 @@ func _ready() -> void:
 	settings_menu.hide()
 	player_tweaks_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	player_tweaks_menu.hide()
-	player_and_camera.position = Vector3(0, player_and_camera.player.PLAYER_HEIGHT / 2, 0)
-	player_and_camera.player.position = Vector3(0, 0, 0) # position = position relative to the parent
+	player.position = Vector3(0, player.PLAYER_HEIGHT / 2, 0)
 	move_up_player_timer.wait_time = MOVE_UP_PLAYER_TIMER_SECONDS
 	move_up_player_timer.start()
 	fps_label_timer.wait_time = FPS_LABEL_TIMER_SECONDS
 	fps_label_timer.start()
-	speed_label.text = "Speed: %f" % player_and_camera.get_player_speed()
+	speed_label.text = "Speed: %f" % player.get_speed()
 	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 
 func _input(event: InputEvent) -> void:
@@ -47,7 +46,7 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(_delta) -> void:
 	if speed_label.visible:
-		speed_label.text = "Speed: %f" % player_and_camera.get_player_speed()
+		speed_label.text = "Speed: %f" % player.get_speed()
 
 func pause() -> void:
 	get_tree().paused = true
@@ -103,8 +102,8 @@ func _on_settings_menu_go_back() -> void:
 
 # On Move Up Player Timer Timeout
 func _on_move_up_p_timer_timeout() -> void:
-	if player_and_camera.player.global_position.y < -200:
-		player_and_camera.player.global_position = Vector3(0, 300, 0)
+	if player.global_position.y < -200:
+		player.global_position = Vector3(0, 300, 0)
 
 # The FPS Label update is in a timer because Engine.get_frames_per_second() does not update very often
 func _on_fps_label_timer_timeout() -> void:

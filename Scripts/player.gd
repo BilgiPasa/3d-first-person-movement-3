@@ -52,7 +52,7 @@ var grounded: bool
 var bumping: bool
 
 # Player Rotation
-var y_rot_deg: float # This variable is assigned by the player_and_camera script
+var y_rot_deg: float # Assigned by the CameraHolder script
 
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.5 # Don't make it smaller than 0.9
@@ -60,7 +60,7 @@ const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # Don't make it bigger than 0.5 beca
 var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 
 # @export Variables
-@export var camera_position: Node3D
+@export var camera_position: Marker3D
 @export var slope_ray_cast: RayCast3D
 @export var can_jump_timer: Timer
 @export var jumping_timer: Timer
