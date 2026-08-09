@@ -2,10 +2,10 @@ class_name Player
 extends RigidBody3D
 
 # Movement
-const AIR_MOVE_MULT: int = 100
+const GROUND_LINEAR_DAMP: int = 750
+const AIR_LINEAR_DAMP: int = 5
 const GROUND_MOVE_MULT: float = 750.01
-const GROUND_LINEAR_DAMP: float = 12.4
-const AIR_LINEAR_DAMP: float = 0.001
+const AIR_MOVE_MULT: float = 100.01
 const MIN: float = 0.1
 const RESET_L_L_V_TIMER_SECONDS: float = 0.5 # Reset Low Linear Velocity Timer Seconds
 var run_speed: float # Assigned at "move_speed_control" function
@@ -81,6 +81,7 @@ func _ready() -> void:
 	continuous_cd = true
 	contact_monitor = true
 	max_contacts_reported = 8
+	linear_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
 	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, (-PLAYER_HEIGHT / 2) + 0.05, 0)
 	slope_ray_cast.target_position = Vector3(0, (-GROUNDED_AREA_RADIUS * 2) - 0.05, 0)
@@ -115,10 +116,10 @@ func _physics_process(delta: float) -> void:
 	coyote_time(delta)
 	jump()
 	crouch()
-	handle_linear_damp()
+	handle_linear_damp(delta)
 	movement(delta)
 	current_state = state_machine(current_state)
-	gravity_control()
+	gravity_control(delta)
 	move_speed_control()
 
 func coyote_time(physics_process_delta: float) -> void:
@@ -176,12 +177,12 @@ func crouch() -> void:
 			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			crouching = false
 
-func handle_linear_damp() -> void:
+func handle_linear_damp(physics_process_delta: float) -> void:
 	if grounded && !jumping && current_state != States.SLIDING:
-		linear_damp = GROUND_LINEAR_DAMP
+		linear_damp = GROUND_LINEAR_DAMP * physics_process_delta
 		air_damp_active = false
 	else:
-		linear_damp = AIR_LINEAR_DAMP
+		linear_damp = AIR_LINEAR_DAMP * physics_process_delta
 		air_damp_active = true
 
 func movement(physics_process_delta: float) -> void:
@@ -317,11 +318,13 @@ func state_machine(state: States) -> States:
 func get_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
-func gravity_control() -> void:
-	if on_slope && current_state != States.SLIDING && touching && grounded:
-		if linear_velocity.y >= MIN:
+func gravity_control(physics_process_delta: float) -> void:
+	if touching && grounded:
+		if current_state == States.SLIDING:
 			gravity_scale = 1
-			apply_force((gravity_amount - 10) * mass * Vector3.UP)
+		elif on_slope && linear_velocity.y >= MIN:
+			gravity_scale = 1
+			apply_force((gravity_amount - 10) * physics_process_delta * mass * Vector3.UP)
 		else:
 			gravity_scale = 0
 	else:
