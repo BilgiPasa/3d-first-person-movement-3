@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bdlpo2pklxjvt"]
 
-[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_cvnsp"]
+[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/player_physics_material.tres" id="1_cvnsp"]
 [ext_resource type="Script" uid="uid://44jn8pyrael2" path="res://Scripts/player.gd" id="1_v0iea"]
 [ext_resource type="Script" uid="uid://cyxipifmrp3tl" path="res://Scripts/camera_holder.gd" id="3_6t5aa"]
 
@@ -16,11 +16,11 @@ radius = 0.3
 [sub_resource type="BoxShape3D" id="BoxShape3D_vgqql"]
 size = Vector3(0.6, 1.1, 0.1)
 
-[node name="Player" type="RigidBody3D" unique_id=529495680 node_paths=PackedStringArray("camera_position", "slope_ray_cast", "can_jump_timer", "jumping_timer", "reset_low_lin_vel_timer", "grounded_area", "grounded_area_coll_shape", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
+[node name="Player" type="RigidBody3D" unique_id=529495680 node_paths=PackedStringArray("camera_position_marker", "slope_ray_cast", "can_jump_timer", "jumping_timer", "reset_low_lin_vel_timer", "grounded_area", "grounded_area_coll_shape", "dont_uncrouch_area", "dont_uncrouch_area_coll_shape", "player_coll_shape", "player_mesh_inst", "bump_area", "bump_area_coll_shape")]
 collision_layer = 2
 physics_material_override = ExtResource("1_cvnsp")
 script = ExtResource("1_v0iea")
-camera_position = NodePath("CameraPosition")
+camera_position_marker = NodePath("CameraPositionMarker")
 slope_ray_cast = NodePath("SlopeRayCast")
 can_jump_timer = NodePath("CanJumpTimer")
 jumping_timer = NodePath("JumpingTimer")
@@ -34,7 +34,7 @@ player_mesh_inst = NodePath("PlayerCollShape/PlayerMeshInst")
 bump_area = NodePath("PlayerCollShape/BumpArea")
 bump_area_coll_shape = NodePath("PlayerCollShape/BumpArea/BumpAreaCollShape")
 
-[node name="CameraPosition" type="Marker3D" parent="." unique_id=1451468109]
+[node name="CameraPositionMarker" type="Marker3D" parent="." unique_id=1451468109]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="SlopeRayCast" type="RayCast3D" parent="." unique_id=1449402386]
@@ -47,11 +47,11 @@ target_position = Vector3(0, -0.65, 0)
 
 [node name="ResetLowLinVelTimer" type="Timer" parent="." unique_id=1197769260]
 
-[node name="CameraHolder" type="Node3D" parent="." unique_id=1730806531 node_paths=PackedStringArray("player", "camera_position", "camera")]
+[node name="CameraHolder" type="Node3D" parent="." unique_id=1730806531 node_paths=PackedStringArray("player", "camera_position_marker", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 script = ExtResource("3_6t5aa")
 player = NodePath("..")
-camera_position = NodePath("../CameraPosition")
+camera_position_marker = NodePath("../CameraPositionMarker")
 camera = NodePath("Camera3D")
 
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=50950328]

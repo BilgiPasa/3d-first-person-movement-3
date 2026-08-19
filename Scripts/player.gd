@@ -60,7 +60,7 @@ const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # Don't make it bigger than 0.5 beca
 var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 
 # @export Variables
-@export var camera_position: Marker3D
+@export var camera_position_marker: Marker3D
 @export var slope_ray_cast: RayCast3D
 @export var can_jump_timer: Timer
 @export var jumping_timer: Timer
@@ -82,7 +82,7 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 8
 	linear_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
-	camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
+	camera_position_marker.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 	slope_ray_cast.position = Vector3(0, (-PLAYER_HEIGHT / 2) + 0.05, 0)
 	slope_ray_cast.target_position = Vector3(0, (-GROUNDED_AREA_RADIUS * 2) - 0.05, 0)
 	can_jump_timer.wait_time = CAN_JUMP_TIMER_SECONDS
@@ -151,7 +151,7 @@ func crouch() -> void:
 		return
 
 	if crouch_input && !crouching:
-		camera_position.position = Vector3(0, (crouch_height / 2) - 0.25, 0)
+		camera_position_marker.position = Vector3(0, (crouch_height / 2) - 0.25, 0)
 		slope_ray_cast.position = Vector3(0, (-crouch_height / 2) + 0.05, 0)
 		grounded_area.position = Vector3(0, -crouch_height / 2, 0)
 		player_coll_shape.shape.height = crouch_height
@@ -174,7 +174,7 @@ func crouch() -> void:
 			player_coll_shape.shape.height = PLAYER_HEIGHT
 			player_mesh_inst.mesh.height = PLAYER_HEIGHT
 			bump_area_coll_shape.shape.size.y = (PLAYER_HEIGHT / 2) + 0.1
-			camera_position.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
+			camera_position_marker.position = Vector3(0, (PLAYER_HEIGHT / 2) - 0.25, 0)
 			crouching = false
 
 func handle_linear_damp(physics_process_delta: float) -> void:
@@ -207,7 +207,7 @@ func movement(physics_process_delta: float) -> void:
 			move_vector.x = 0 # Stop X axis acceleration
 
 		# If player is faster than its movement speed
-		if get_speed() > move_speed:
+		if get_flat_speed() > move_speed:
 			# If (player is moving forward and player is faster than half of its movement speed in -Z) or (player is moving back and player is faster than half of its movement speed in Z)
 			if (move_vector.z <= -MIN && lin_vel_in_air_relative_to_cam.z < -move_speed / 2) || (move_vector.z >= MIN && lin_vel_in_air_relative_to_cam.z > move_speed / 2):
 				move_vector.z = 0 # Stop Z axis acceleration
@@ -251,7 +251,7 @@ func rotate_vector_around_y_axis(vector: Vector3, radians: float) -> Vector3:
 
 func state_machine(state: States) -> States:
 	if state == States.IDLE:
-		if get_speed() >= MIN:
+		if get_flat_speed() >= MIN:
 			return States.WALKING
 		elif crouching:
 			return States.CROUCHING
@@ -261,14 +261,14 @@ func state_machine(state: States) -> States:
 		if crouching:
 			if on_slope:
 				return States.SLIDING
-			elif get_speed() >= MIN:
+			elif get_flat_speed() >= MIN:
 				return States.CROUCH_WALKING
 			else:
 				return States.CROUCHING
 		else:
 			return States.IDLE
 	elif state == States.WALKING:
-		if get_speed() >= MIN:
+		if get_flat_speed() >= MIN:
 			if crouching:
 				return States.CROUCH_WALKING
 			elif run_input:
@@ -278,7 +278,7 @@ func state_machine(state: States) -> States:
 		else:
 			return States.IDLE
 	elif state == States.RUNNING:
-		if get_speed() >= MIN:
+		if get_flat_speed() >= MIN:
 			if crouching:
 				return States.CROUCH_WALKING
 			elif run_input:
@@ -293,9 +293,9 @@ func state_machine(state: States) -> States:
 		if crouching:
 			if on_slope:
 				return States.SLIDING
-			elif get_speed() >= min_sliding_speed:
+			elif get_flat_speed() >= min_sliding_speed:
 				return States.SLIDING
-			elif get_speed() >= MIN:
+			elif get_flat_speed() >= MIN:
 				return States.CROUCH_WALKING
 			else:
 				return States.CROUCHING
@@ -305,7 +305,7 @@ func state_machine(state: States) -> States:
 		if crouching:
 			if on_slope:
 				return States.SLIDING
-			elif get_speed() >= min_sliding_speed:
+			elif get_flat_speed() >= min_sliding_speed:
 				return States.SLIDING
 			else:
 				return States.CROUCH_WALKING
@@ -315,7 +315,7 @@ func state_machine(state: States) -> States:
 		return States.IDLE
 
 # Return the player speed at XZ plane
-func get_speed() -> float:
+func get_flat_speed() -> float:
 	return sqrt(pow(linear_velocity.x, 2) + pow(linear_velocity.z, 2))
 
 func gravity_control(physics_process_delta: float) -> void:

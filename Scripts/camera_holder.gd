@@ -21,7 +21,7 @@ var zoom_input: bool
 
 # @export Variables
 @export var player: Player
-@export var camera_position: Marker3D
+@export var camera_position_marker: Marker3D
 @export var camera: Camera3D
 
 func _ready() -> void:
@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	fov_change(delta)
 
 func camera_position_and_rotation() -> void:
-	global_position = camera_position.global_position # Move camera holder to camera position
+	global_position = camera_position_marker.global_position # Move camera holder to camera position
 	rotation_degrees = Vector3(x_rot_deg, y_rot_deg, 0) # Rotate camera holder
 	player.y_rot_deg = y_rot_deg # Assign rotation degrees for player
 
@@ -52,7 +52,7 @@ func fov_change(process_delta: float) -> void:
 	if !zoom_input:
 		current_cam_rot_mult = NORMAL_CAM_ROT_MULT
 
-		if !(Globals.sprint_fov_change > 0 && (player.current_state == player.States.RUNNING || (player.current_state == player.States.SLIDING && player.get_speed() > player.run_speed))):
+		if !(Globals.sprint_fov_change > 0 && (player.current_state == player.States.RUNNING || (player.current_state == player.States.SLIDING && player.get_flat_speed() > player.run_speed))):
 			if camera.fov > Globals.normal_fov - 0.01 && camera.fov < Globals.normal_fov + 0.01:
 				camera.fov = Globals.normal_fov
 			else:
@@ -67,7 +67,7 @@ func fov_change(process_delta: float) -> void:
 	else:
 		current_cam_rot_mult = ZOOMED_CAM_ROT_MULT
 
-		if !(Globals.sprint_fov_change > 0 && (player.current_state == player.States.RUNNING || (player.current_state == player.States.SLIDING && player.get_speed() > player.run_speed))):
+		if !(Globals.sprint_fov_change > 0 && (player.current_state == player.States.RUNNING || (player.current_state == player.States.SLIDING && player.get_flat_speed() > player.run_speed))):
 			zoom_fov = Globals.normal_fov / 5.0 # To make floating point division, 5.0 is written here instead of 5
 
 			if camera.fov < zoom_fov + 0.01:

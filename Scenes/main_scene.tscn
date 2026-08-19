@@ -39,13 +39,13 @@ environment = SubResource("Environment_x6ack")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
+[node name="Player" parent="." unique_id=529495680 instance=ExtResource("4_maf8m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
 [node name="StaticEnvironment" parent="." unique_id=2118310843 instance=ExtResource("2_6ev3c")]
 
 [node name="MovableCubes" parent="." unique_id=1881250913 instance=ExtResource("3_maf8m")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -50)
-
-[node name="Player" parent="." unique_id=529495680 instance=ExtResource("4_maf8m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MoveUpPlayerTimer" type="Timer" parent="." unique_id=2021917314]
 

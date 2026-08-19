@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://s5psyjsom882"]
 
 [ext_resource type="Texture2D" uid="uid://dyy8iuj4iighw" path="res://Materials/Sprites/LightBlueWithCorners.png" id="1_8nhbc"]
-[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_bkqhc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhpl"]
 albedo_texture = ExtResource("1_8nhbc")
@@ -17,7 +16,6 @@ size = Vector3(4, 0.1, 4)
 size = Vector3(4, 0.1, 4)
 
 [node name="SmallPlatform" type="StaticBody3D" unique_id=109542825]
-physics_material_override = ExtResource("1_bkqhc")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=671489852]
 mesh = SubResource("BoxMesh_5s483")

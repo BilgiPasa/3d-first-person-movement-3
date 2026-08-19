@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b5aoq6im5wkcb"]
 
-[ext_resource type="PhysicsMaterial" uid="uid://dkur8tg6eel05" path="res://Materials/little_friction_no_bounciness.tres" id="1_18vbn"]
+[ext_resource type="PhysicsMaterial" uid="uid://dkur8tg6eel05" path="res://Materials/movable_cubes_physics_material.tres" id="1_18vbn"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_r07tb"]
 

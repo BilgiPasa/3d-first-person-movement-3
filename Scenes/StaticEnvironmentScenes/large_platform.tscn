@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://8ckixlkujxa4"]
 
-[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_huifd"]
 [ext_resource type="Texture2D" uid="uid://c7iddkfce7a2v" path="res://Materials/Sprites/DarkTurquoiseWithCorners.png" id="2_xq6vx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhpl"]
@@ -16,7 +15,6 @@ size = Vector3(8, 0.1, 8)
 size = Vector3(8, 0.1, 8)
 
 [node name="LargePlatform" type="StaticBody3D" unique_id=1681733004]
-physics_material_override = ExtResource("1_huifd")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=621170785]
 mesh = SubResource("BoxMesh_r07tb")

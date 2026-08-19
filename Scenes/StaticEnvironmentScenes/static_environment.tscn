@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://2ipg0oj6jbv1"]
 
 [ext_resource type="ArrayOccluder3D" uid="uid://dq78qaq70kt43" path="res://Scenes/StaticEnvironmentScenes/static_environment.occ" id="1_jf7di"]
-[ext_resource type="PhysicsMaterial" uid="uid://bv186x3q7y5ti" path="res://Materials/no_friction_and_bounciness.tres" id="1_m1wx5"]
 [ext_resource type="Texture2D" uid="uid://d03ws3dcm58v3" path="res://Materials/Sprites/DarkBlueWithCorners.png" id="2_jf7di"]
 [ext_resource type="PackedScene" uid="uid://dfd80qt21v6d7" path="res://Scenes/StaticEnvironmentScenes/medium_platform.tscn" id="3_lbqpc"]
 [ext_resource type="PackedScene" uid="uid://8ckixlkujxa4" path="res://Scenes/StaticEnvironmentScenes/large_platform.tscn" id="4_cq8ci"]
@@ -66,7 +65,6 @@ occluder = ExtResource("1_jf7di")
 
 [node name="MainGround" type="StaticBody3D" parent="." unique_id=737079153]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainGround" unique_id=2055585675]
 mesh = SubResource("BoxMesh_r07tb")
@@ -74,9 +72,11 @@ mesh = SubResource("BoxMesh_r07tb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainGround" unique_id=1631115435]
 shape = SubResource("BoxShape3D_5s483")
 
+[node name="Ramp1MediumPlatf" parent="." unique_id=697687387 instance=ExtResource("3_lbqpc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.945, -28.88)
+
 [node name="Ramp1" type="StaticBody3D" parent="." unique_id=272420716]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 3.955, -18.975)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp1" unique_id=747312510]
 mesh = SubResource("BoxMesh_icmdk")
@@ -84,12 +84,11 @@ mesh = SubResource("BoxMesh_icmdk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp1" unique_id=1168270496]
 shape = SubResource("BoxShape3D_7lsjx")
 
-[node name="Ramp1MediumPlatf" parent="." unique_id=697687387 instance=ExtResource("3_lbqpc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.945, -28.88)
+[node name="60DegRampLargePlatf" parent="." unique_id=1681733004 instance=ExtResource("4_cq8ci")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 10)
 
 [node name="60DegreeRamp" type="StaticBody3D" parent="." unique_id=612098239]
 transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, -53.67, 7.395, 10)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="60DegreeRamp" unique_id=1619575586]
 mesh = SubResource("BoxMesh_wkhpl")
@@ -97,12 +96,11 @@ mesh = SubResource("BoxMesh_wkhpl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="60DegreeRamp" unique_id=387946555]
 shape = SubResource("BoxShape3D_icmdk")
 
-[node name="60DegRampLargePlatf" parent="." unique_id=1681733004 instance=ExtResource("4_cq8ci")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 10)
+[node name="45DegRampLargePlatf" parent="." unique_id=67593851 instance=ExtResource("4_cq8ci")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 35)
 
 [node name="45DegreeRamp" type="StaticBody3D" parent="." unique_id=1071888534]
 transform = Transform3D(0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0, 1, -50.525, 7.455, 35)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="45DegreeRamp" unique_id=584118885]
 mesh = SubResource("BoxMesh_7lsjx")
@@ -110,12 +108,11 @@ mesh = SubResource("BoxMesh_7lsjx")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="45DegreeRamp" unique_id=2056648244]
 shape = SubResource("BoxShape3D_wkhpl")
 
-[node name="45DegRampLargePlatf" parent="." unique_id=67593851 instance=ExtResource("4_cq8ci")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 35)
+[node name="30DegRampLargePlatf" parent="." unique_id=1392086093 instance=ExtResource("4_cq8ci")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 60)
 
 [node name="30DegreeRamp" type="StaticBody3D" parent="." unique_id=1147850264]
 transform = Transform3D(0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0, 0, 1, -45.035, 7.46, 60)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="30DegreeRamp" unique_id=1350056164]
 mesh = SubResource("BoxMesh_5s483")
@@ -123,12 +120,11 @@ mesh = SubResource("BoxMesh_5s483")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="30DegreeRamp" unique_id=700926588]
 shape = SubResource("BoxShape3D_r07tb")
 
-[node name="30DegRampLargePlatf" parent="." unique_id=1392086093 instance=ExtResource("4_cq8ci")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 60)
+[node name="15DegRampLargePlatf" parent="." unique_id=1858488330 instance=ExtResource("4_cq8ci")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 85)
 
 [node name="15DegreeRamp" type="StaticBody3D" parent="." unique_id=555822390]
 transform = Transform3D(0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0, 0, 1, -30, 7.445, 85)
-physics_material_override = ExtResource("1_m1wx5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="15DegreeRamp" unique_id=1348192670]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
@@ -137,9 +133,6 @@ mesh = SubResource("BoxMesh_8gss0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="15DegreeRamp" unique_id=1190853985]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_nic6v")
-
-[node name="15DegRampLargePlatf" parent="." unique_id=1858488330 instance=ExtResource("4_cq8ci")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62, 14.95, 85)
 
 [node name="InfoSign" type="StaticBody3D" parent="." unique_id=2082273330]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 50, 5, 5)

@@ -17,7 +17,6 @@ const FPS_LABEL_TIMER_SECONDS: float = 0.5
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	pause_menu.hide()
 	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
@@ -29,8 +28,8 @@ func _ready() -> void:
 	move_up_player_timer.start()
 	fps_label_timer.wait_time = FPS_LABEL_TIMER_SECONDS
 	fps_label_timer.start()
-	speed_label.text = "Speed: %f" % player.get_speed()
 	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed
@@ -46,7 +45,7 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(_delta) -> void:
 	if speed_label.visible:
-		speed_label.text = "Speed: %f" % player.get_speed()
+		speed_label.text = "Speed: %f" % player.get_flat_speed()
 
 func pause() -> void:
 	get_tree().paused = true
