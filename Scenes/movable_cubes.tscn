@@ -10,7 +10,8 @@
 
 [node name="Cube" type="RigidBody3D" parent="." unique_id=2059291752]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -22,7 +23,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube2" type="RigidBody3D" parent="." unique_id=1960950292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -34,7 +36,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube3" type="RigidBody3D" parent="." unique_id=1070509630]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -46,7 +49,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube4" type="RigidBody3D" parent="." unique_id=1678166293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -58,7 +62,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube5" type="RigidBody3D" parent="." unique_id=1587983395]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -70,7 +75,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube6" type="RigidBody3D" parent="." unique_id=1526654025]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -82,7 +88,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube7" type="RigidBody3D" parent="." unique_id=1525259255]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -94,7 +101,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube8" type="RigidBody3D" parent="." unique_id=1590036869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -106,7 +114,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube9" type="RigidBody3D" parent="." unique_id=1468137311]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -118,7 +127,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube10" type="RigidBody3D" parent="." unique_id=164629715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -130,7 +140,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube11" type="RigidBody3D" parent="." unique_id=1952386479]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -142,7 +153,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube12" type="RigidBody3D" parent="." unique_id=136124881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -154,7 +166,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube13" type="RigidBody3D" parent="." unique_id=1790189366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -166,7 +179,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube14" type="RigidBody3D" parent="." unique_id=1847990566]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -178,7 +192,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube15" type="RigidBody3D" parent="." unique_id=501847050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 28.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 
@@ -190,7 +205,8 @@ shape = SubResource("BoxShape3D_5s483")
 
 [node name="Cube16" type="RigidBody3D" parent="." unique_id=1624720599]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30.5, 0)
-collision_mask = 3
+collision_layer = 4
+collision_mask = 7
 physics_material_override = ExtResource("1_18vbn")
 continuous_cd = true
 

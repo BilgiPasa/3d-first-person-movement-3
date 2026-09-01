@@ -10,26 +10,33 @@ const FPS_LABEL_TIMER_SECONDS: float = 0.5
 @export var fps_label_timer: Timer
 @export var speed_label: Label
 @export var fps_label: Label
+@export var crosshair: TextureRect
 @export var pause_menu: Control
 @export var settings_menu: Control
 @export var player_tweaks_menu: Control
 @export var fps_label_initial_position: Vector2
 
 func _ready() -> void:
+	# Initialize the process_mode
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
-	pause_menu.hide()
-	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
-	settings_menu.hide()
-	player_tweaks_menu.process_mode = Node.PROCESS_MODE_DISABLED
-	player_tweaks_menu.hide()
+
+	# Initialize the mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+	# Initialize @export variables
 	player.position = Vector3(0, player.PLAYER_HEIGHT / 2, 0)
 	move_up_player_timer.wait_time = MOVE_UP_PLAYER_TIMER_SECONDS
 	move_up_player_timer.start()
 	fps_label_timer.wait_time = FPS_LABEL_TIMER_SECONDS
 	fps_label_timer.start()
 	fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	crosshair.modulate = Color.BLACK
+	pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
+	pause_menu.hide()
+	settings_menu.process_mode = Node.PROCESS_MODE_DISABLED
+	settings_menu.hide()
+	player_tweaks_menu.process_mode = Node.PROCESS_MODE_DISABLED
+	player_tweaks_menu.hide()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"): # If "esc" key pressed
@@ -99,21 +106,20 @@ func _on_pause_menu_open_settings() -> void:
 func _on_settings_menu_go_back() -> void:
 	close_settings()
 
-# On Move Up Player Timer Timeout
-func _on_move_up_p_timer_timeout() -> void:
+func _on_move_up_p_timer_timeout() -> void: # _on_move_up_player_timer_timeout
 	if player.global_position.y < -200:
 		player.global_position = Vector3(0, 300, 0)
 
-# The FPS Label update is in a timer because Engine.get_frames_per_second() does not update very often
+# The FPS Label update is in a timer because Engine.get_frames_per_second() does not update very often.
 func _on_fps_label_timer_timeout() -> void:
 	if fps_label.visible:
 		fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 
-func _on_settings_menu_show_spd_lbl() -> void:
+func _on_settings_menu_show_spd_lbl() -> void: # _on_settings_menu_show_speed_label
 	speed_label.show()
 	fps_label.position = fps_label_initial_position
 
-func _on_settings_menu_show_fps_lbl() -> void:
+func _on_settings_menu_show_fps_lbl() -> void: # _on_settings_menu_show_fps_label
 	fps_label.show()
 
 	if speed_label.visible:
@@ -121,15 +127,18 @@ func _on_settings_menu_show_fps_lbl() -> void:
 	else:
 		fps_label.position = speed_label.position
 
-func _on_settings_menu_hide_spd_lbl() -> void:
+func _on_settings_menu_hide_spd_lbl() -> void: # _on_settings_menu_hide_speed_label
 	speed_label.hide()
 	fps_label.position = speed_label.position
 
-func _on_settings_menu_hide_fps_lbl() -> void:
+func _on_settings_menu_hide_fps_lbl() -> void: # _on_settings_menu_hide_fps_label
 	fps_label.hide()
 
-func _on_settings_menu_open_p_t_m() -> void:
+func _on_settings_menu_open_p_t_m() -> void: # _on_settings_menu_open_player_tweaks_menu
 	open_player_tweaks()
 
 func _on_player_tweaks_menu_go_back() -> void:
 	close_player_tweaks()
+
+func _on_player_set_crosshair_color(crosshair_color: Color) -> void:
+	crosshair.modulate = crosshair_color

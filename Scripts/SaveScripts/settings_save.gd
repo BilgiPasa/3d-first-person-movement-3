@@ -1,17 +1,10 @@
 class_name SettingsSave
 extends Resource
 
-# PlayerAndCamera Camera FOV
 @export var normal_fov: int = Defaults.NORMAL_FOV
 @export var sprint_fov_change: int = Defaults.SPRINT_FOV_CHANGE
-
-# PlayerAndCamera Camera Rotation
 @export var mouse_sensitivity: int = Defaults.MOUSE_SENSITIVITY
-
-# Max FPS Setting
 @export var max_fps_setting: int = Defaults.MAX_FPS_SETTING
-
-# Labels' Visibility Settings
 @export var speed_label_visible: bool = Defaults.SPEED_LABEL_VISIBLE
 @export var fps_label_visible: bool = Defaults.FPS_LABEL_VISIBLE
 

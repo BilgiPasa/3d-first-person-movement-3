@@ -7,7 +7,6 @@ signal hide_fps_label
 signal open_player_tweaks_menu
 signal go_back
 
-# @export Variables
 @export var fov_label: Label
 @export var fov_slider: HSlider
 @export var max_fps_label: Label
@@ -20,8 +19,8 @@ signal go_back
 @export var fps_label_on_off_button: Button
 @export var go_back_button: Button
 
+# * Initialize the SettingsMenu UI
 func _ready() -> void:
-	# Initialize the SettingsMenu UI
 	fov_slider.value = Globals.normal_fov
 	update_about_fov(int(fov_slider.value))
 	max_fps_slider.value = Globals.max_fps_setting
@@ -52,16 +51,16 @@ func _on_visibility_changed() -> void:
 func _on_fov_slider_value_changed(value: float) -> void:
 	update_about_fov(int(value))
 
-func _on_max_fps_sldr_value_changed(value: float) -> void:
+func _on_max_fps_sldr_value_changed(value: float) -> void: # _on_max_fps_slider_value_changed
 	update_about_max_fps(int(value))
 
-func _on_m_s_slider_value_changed(value: float) -> void:
+func _on_m_s_slider_value_changed(value: float) -> void: # _on_mouse_sensitivity_slider_value_changed
 	update_about_mouse_sensitivity(int(value))
 
-func _on_s_fov_c_sldr_value_changed(value: float) -> void:
+func _on_s_fov_c_sldr_value_changed(value: float) -> void: # _on_sprint_fov_change_slider_value_changed
 	update_about_sprint_fov_change(int(value))
 
-func _on_spd_lbl_on_off_btn_pressed() -> void:
+func _on_spd_lbl_on_off_btn_pressed() -> void: # _on_speed_label_on_off_button_pressed
 	if Globals.speed_label_visible:
 		Globals.speed_label_visible = false
 		hide_speed_label.emit()
@@ -71,7 +70,7 @@ func _on_spd_lbl_on_off_btn_pressed() -> void:
 		show_speed_label.emit()
 		speed_label_on_off_button.text = "Hide Speed Label"
 
-func _on_fps_lbl_on_off_btn_pressed() -> void:
+func _on_fps_lbl_on_off_btn_pressed() -> void: # _on_fps_label_on_off_button_pressed
 	if Globals.fps_label_visible:
 		Globals.fps_label_visible = false
 		hide_fps_label.emit()
@@ -81,10 +80,10 @@ func _on_fps_lbl_on_off_btn_pressed() -> void:
 		show_fps_label.emit()
 		fps_label_on_off_button.text = "Hide FPS Label"
 
-func _on_player_tweaks_btn_pressed() -> void:
+func _on_player_tweaks_btn_pressed() -> void: # _on_player_tweaks_button_pressed
 	open_player_tweaks_menu.emit()
 
-func _on_reset_settings_btn_pressed() -> void:
+func _on_reset_settings_btn_pressed() -> void: # _on_reset_settings_button_pressed
 	# Reset Settings
 	fov_slider.value = Defaults.NORMAL_FOV
 	update_about_fov(int(fov_slider.value))

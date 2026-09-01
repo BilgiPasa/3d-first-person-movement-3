@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dgswa7otbkuth" path="res://Scenes/pause_menu.tscn" id="2_6l7je"]
 [ext_resource type="PackedScene" uid="uid://b5aoq6im5wkcb" path="res://Scenes/movable_cubes.tscn" id="3_maf8m"]
 [ext_resource type="PackedScene" uid="uid://bdlpo2pklxjvt" path="res://Scenes/player.tscn" id="4_maf8m"]
+[ext_resource type="Texture2D" uid="uid://crapv1ecec7so" path="res://Materials/Sprites/WhiteDot.png" id="5_huasi"]
 [ext_resource type="PackedScene" uid="uid://wbiuygagbqyl" path="res://Scenes/settings_menu.tscn" id="5_iacmt"]
 [ext_resource type="PackedScene" uid="uid://dxda86d1wpe3r" path="res://Scenes/player_tweaks_menu.tscn" id="6_6ev3c"]
 
@@ -20,13 +21,14 @@ background_mode = 2
 sky = SubResource("Sky_jv6wh")
 glow_enabled = true
 
-[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player", "move_up_player_timer", "fps_label_timer", "speed_label", "fps_label", "pause_menu", "settings_menu", "player_tweaks_menu")]
+[node name="MainScene" type="Node3D" unique_id=1991236932 node_paths=PackedStringArray("player", "move_up_player_timer", "fps_label_timer", "speed_label", "fps_label", "crosshair", "pause_menu", "settings_menu", "player_tweaks_menu")]
 script = ExtResource("1_jv6wh")
 player = NodePath("Player")
 move_up_player_timer = NodePath("MoveUpPlayerTimer")
 fps_label_timer = NodePath("FPSLabelTimer")
 speed_label = NodePath("CanvasLayer/SpeedLabel")
 fps_label = NodePath("CanvasLayer/FPSLabel")
+crosshair = NodePath("CanvasLayer/Crosshair")
 pause_menu = NodePath("CanvasLayer/PauseMenu")
 settings_menu = NodePath("CanvasLayer/SettingsMenu")
 player_tweaks_menu = NodePath("CanvasLayer/PlayerTweaksMenu")
@@ -69,6 +71,22 @@ offset_bottom = 135.0
 theme_override_font_sizes/font_size = 40
 text = "FPS: x"
 
+[node name="Crosshair" type="TextureRect" parent="CanvasLayer" unique_id=1041934263]
+modulate = Color(0, 0, 0, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_huasi")
+expand_mode = 1
+
 [node name="PauseMenu" parent="CanvasLayer" unique_id=788778746 instance=ExtResource("2_6l7je")]
 visible = false
 
@@ -78,6 +96,7 @@ visible = false
 [node name="PlayerTweaksMenu" parent="CanvasLayer" unique_id=1924415816 instance=ExtResource("6_6ev3c")]
 visible = false
 
+[connection signal="set_crosshair_color" from="Player" to="." method="_on_player_set_crosshair_color"]
 [connection signal="timeout" from="MoveUpPlayerTimer" to="." method="_on_move_up_p_timer_timeout"]
 [connection signal="timeout" from="FPSLabelTimer" to="." method="_on_fps_label_timer_timeout"]
 [connection signal="open_settings" from="CanvasLayer/PauseMenu" to="." method="_on_pause_menu_open_settings"]

@@ -1,10 +1,7 @@
 class_name PlayerTweaksSave
 extends Resource
 
-# Player Movement
 @export var normal_speed: int = Defaults.NORMAL_SPEED
-
-# Player Jump
 @export var jump_speed: int = Defaults.JUMP_SPEED
 
 const SAVE_PATH: String = "user://player_tweaks_save.tres" # I'm using .tres because I want to make it easily modifiable.

@@ -2,15 +2,14 @@ extends Control
 
 signal go_back
 
-# @export Variables
 @export var normal_speed_label: Label
 @export var normal_speed_slider: HSlider
 @export var jump_speed_label: Label
 @export var jump_speed_slider: HSlider
 @export var go_back_button: Button
 
+# * Initialize the PlayerTweaksMenu UI
 func _ready() -> void:
-	# Initialize the PlayerTweaksMenu UI
 	normal_speed_slider.value = Globals.normal_speed
 	update_about_normal_speed(int(normal_speed_slider.value))
 	jump_speed_slider.value = Globals.jump_speed
@@ -20,13 +19,13 @@ func _on_visibility_changed() -> void:
 	if visible:
 		go_back_button.grab_focus()
 
-func _on_n_spd_slider_value_changed(value: float) -> void:
+func _on_n_spd_slider_value_changed(value: float) -> void: # _on_normal_speed_slider_value_changed
 	update_about_normal_speed(int(value))
 
-func _on_j_spd_slider_value_changed(value: float) -> void:
+func _on_j_spd_slider_value_changed(value: float) -> void: # _on_jump_speed_slider_value_changed
 	update_about_jump_speed(int(value))
 
-func _on_reset_p_tweaks_btn_pressed() -> void:
+func _on_reset_p_tweaks_btn_pressed() -> void: # _on_reset_player_tweaks_button_pressed
 	# Reset Player Tweaks
 	normal_speed_slider.value = Defaults.NORMAL_SPEED
 	update_about_normal_speed(int(normal_speed_slider.value))

@@ -1,9 +1,8 @@
-class_name CameraHolder
 extends Node3D
 
-# Camera Rotation
-var x_rot_deg: float = 0 # x rotation degrees
-var y_rot_deg: float = 0 # y rotation degrees
+# Camera Rotation Degrees
+var x_rot_deg: float = 0
+var y_rot_deg: float = 0
 
 # Camera Rotation Multipliers
 const NORMAL_CAM_ROT_MULT: int = 1
@@ -25,8 +24,7 @@ var zoom_input: bool
 @export var camera: Camera3D
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_PAUSABLE
-	top_level = true # This setting allows the CameraHolder to move independently from its parent node, the Player node.
+	top_level = true # This setting allows the CameraHolder node to move independently from its parent node, the Player node.
 	current_cam_rot_mult = NORMAL_CAM_ROT_MULT
 	camera.fov = Globals.normal_fov
 
