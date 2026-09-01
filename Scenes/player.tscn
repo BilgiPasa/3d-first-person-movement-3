@@ -68,6 +68,7 @@ camera_position_marker = NodePath("../CameraPositionMarker")
 camera = NodePath("Camera3D")
 
 [node name="Camera3D" type="Camera3D" parent="CameraHolder" unique_id=50950328]
+cull_mask = 1048573
 
 [node name="HoldedObjectPositionMarker" type="Marker3D" parent="CameraHolder" unique_id=1852497011]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)

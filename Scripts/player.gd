@@ -79,7 +79,7 @@ var y_rot_deg: float # NOTE: It is assigned by camera_holder.gd
 
 # Player Sizes
 const PLAYER_HEIGHT: float = 2.5 # NOTE: Don't make it smaller than 0.9
-const CROUCH_HEIGHT_DIFFERENCE: float = 0.5 # NOTE: Don't make it bigger than 0.5 because if you do, you might see a visual bug when crouching.
+const CROUCH_HEIGHT_DIFFERENCE: float = 0.5
 var crouch_height: float = PLAYER_HEIGHT - CROUCH_HEIGHT_DIFFERENCE
 
 # @export Variables

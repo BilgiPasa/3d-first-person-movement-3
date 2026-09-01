@@ -153,16 +153,37 @@ Press W and R to run
 Press C to camera zoom"
 font_size = 175
 
-[node name="InfoSign2" type="StaticBody3D" parent="." unique_id=1004068327]
+[node name="InfoSign2" type="StaticBody3D" parent="." unique_id=1605679593]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 50, 5, 18)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="InfoSign2" unique_id=654554249]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InfoSign2" unique_id=2038803659]
 mesh = SubResource("BoxMesh_nic6v")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InfoSign2" unique_id=496313282]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfoSign2" unique_id=917479425]
 shape = SubResource("BoxShape3D_8gss0")
 
-[node name="Label3D" type="Label3D" parent="InfoSign2" unique_id=86075080]
+[node name="Label3D" type="Label3D" parent="InfoSign2" unique_id=328132305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.255)
+text = "More Player Controls:
+Press E to hold the movable object
+that you are looking at.
+Press Left Mouse Click to throw the
+object that you are holding.
+Use Mouse Scroll Wheel to move
+the object that you are holding
+forward and backward."
+font_size = 130
+
+[node name="InfoSign3" type="StaticBody3D" parent="." unique_id=1004068327]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 50, 5, 31)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InfoSign3" unique_id=654554249]
+mesh = SubResource("BoxMesh_nic6v")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfoSign3" unique_id=496313282]
+shape = SubResource("BoxShape3D_8gss0")
+
+[node name="Label3D" type="Label3D" parent="InfoSign3" unique_id=86075080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.255)
 text = "If you crouch while standing on
 a slope, you slide. Also, if you
@@ -171,6 +192,26 @@ than your running speed, you
 also slide. If you stop crouching
 or move slower than your
 running speed, you stop sliding."
+font_size = 145
+
+[node name="InfoSign4" type="StaticBody3D" parent="." unique_id=246748124]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 50, 5, 44)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InfoSign4" unique_id=1527338379]
+mesh = SubResource("BoxMesh_nic6v")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfoSign4" unique_id=1570516829]
+shape = SubResource("BoxShape3D_8gss0")
+
+[node name="Label3D" type="Label3D" parent="InfoSign4" unique_id=1188116300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.255)
+text = "If you stand on or touch the
+object that you are holding,
+you release that object. If the
+object that you are holding is
+too far away from Player's
+object hold position,
+you release that object."
 font_size = 150
 
 [node name="AscendingSmallPlatforms" type="Node3D" parent="." unique_id=566787657]
