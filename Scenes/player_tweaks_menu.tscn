@@ -5,7 +5,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5s483"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="PlayerTweaksMenu" type="Control" unique_id=1924415816 node_paths=PackedStringArray("normal_speed_label", "normal_speed_slider", "jump_speed_label", "jump_speed_slider", "go_back_button")]
+[node name="PlayerTweaksMenu" type="Control" unique_id=1924415816 node_paths=PackedStringArray("normal_speed_label", "normal_speed_slider", "jump_speed_label", "jump_speed_slider", "throw_force_label", "throw_force_slider", "go_back_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,8 @@ normal_speed_label = NodePath("Panel/NormalSpeedLabel")
 normal_speed_slider = NodePath("Panel/NormalSpeedSlider")
 jump_speed_label = NodePath("Panel/JumpSpeedLabel")
 jump_speed_slider = NodePath("Panel/JumpSpeedSlider")
+throw_force_label = NodePath("Panel/ThrowForceLabel")
+throw_force_slider = NodePath("Panel/ThrowForceSlider")
 go_back_button = NodePath("Panel/GoBackButton")
 
 [node name="Panel" type="Panel" parent="." unique_id=1791096207]
@@ -48,10 +50,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -585.0
-offset_top = -90.0
-offset_right = -238.0
-offset_bottom = -21.0
+offset_left = -610.0
+offset_top = -240.0
+offset_right = -213.0
+offset_bottom = -170.99939
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 50
@@ -65,9 +67,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -685.0
-offset_top = 10.0
+offset_top = -140.0
 offset_right = -417.5
-offset_bottom = 30.0
+offset_bottom = -120.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2, 2)
@@ -88,9 +90,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 255.0
-offset_top = -90.0
+offset_top = -240.0
 offset_right = 596.0001
-offset_bottom = -21.0
+offset_bottom = -170.99939
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 50
@@ -104,9 +106,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 145.0
-offset_top = 10.0
+offset_top = -140.0
 offset_right = 412.5
-offset_bottom = 30.0
+offset_bottom = -120.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2, 2)
@@ -118,6 +120,41 @@ focus_next = NodePath("../GoBackButton")
 focus_previous = NodePath("../NormalSpeedSlider")
 min_value = 1.0
 value = 13.0
+
+[node name="ThrowForceLabel" type="Label" parent="Panel" unique_id=748743917]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.5
+offset_top = 10.0
+offset_right = 176.5
+offset_bottom = 79.00012
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Throw Force: x"
+
+[node name="ThrowForceSlider" type="HSlider" parent="Panel" unique_id=1198633624]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -265.5
+offset_top = 110.0
+offset_right = 2.0007935
+offset_bottom = 129.99994
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+min_value = 5.0
+max_value = 500.0
+step = 5.0
+value = 75.0
 
 [node name="ResetPlayerTweaksButton" type="Button" parent="Panel" unique_id=336970787]
 layout_mode = 1
@@ -163,5 +200,6 @@ text = "Go Back"
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="value_changed" from="Panel/NormalSpeedSlider" to="." method="_on_n_spd_slider_value_changed"]
 [connection signal="value_changed" from="Panel/JumpSpeedSlider" to="." method="_on_j_spd_slider_value_changed"]
+[connection signal="value_changed" from="Panel/ThrowForceSlider" to="." method="_on_throw_f_sldr_value_changed"]
 [connection signal="pressed" from="Panel/ResetPlayerTweaksButton" to="." method="_on_reset_p_tweaks_btn_pressed"]
 [connection signal="pressed" from="Panel/GoBackButton" to="." method="_on_go_back_button_pressed"]

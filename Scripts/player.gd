@@ -48,7 +48,6 @@ const CAN_HOLD_TIMER_SECONDS: float = 0.6
 const CAN_MUST_REL_OBJ_TIMER_SECONDS: float = 0.5 # CAN_MUST_RELEASE_OBJECT_TIMER_SECONDS
 const CR_BLINK_RED_TIMER_SECONDS: float = 0.3 # CROSSHAIR_BLINK_RED_TIMER_SECONDS
 var hold_force: int = 50000
-var throw_force: int = 75
 var min_hold_distance: int = 3
 var max_hold_distance: int = 6
 var initial_hold_distance: int = 4
@@ -410,7 +409,7 @@ func handle_hold_and_throw(physics_process_delta: float) -> void:
 
 		if throw_now:
 			throw_now = false
-			holded_object.apply_impulse(throw_force * -camera.global_basis.z);
+			holded_object.apply_impulse(Globals.throw_force * -camera.global_basis.z);
 			release_holded_object(false)
 			return
 

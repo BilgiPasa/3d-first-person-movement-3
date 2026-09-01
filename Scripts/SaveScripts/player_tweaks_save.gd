@@ -3,12 +3,14 @@ extends Resource
 
 @export var normal_speed: int = Defaults.NORMAL_SPEED
 @export var jump_speed: int = Defaults.JUMP_SPEED
+@export var throw_force: int = Defaults.THROW_FORCE
 
 const SAVE_PATH: String = "user://player_tweaks_save.tres" # I'm using .tres because I want to make it easily modifiable.
 
 func save() -> void:
 	normal_speed = Globals.normal_speed
 	jump_speed = Globals.jump_speed
+	throw_force = Globals.throw_force
 	ResourceSaver.save(self, SAVE_PATH)
 
 static func load_or_create() -> PlayerTweaksSave:
